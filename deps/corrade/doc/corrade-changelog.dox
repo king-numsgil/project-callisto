@@ -1,0 +1,1137 @@
+/*
+    This file is part of Corrade.
+
+    Copyright © 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+                2017, 2018, 2019 Vladimír Vondruš <mosra@centrum.cz>
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+*/
+
+namespace Corrade {
+
+/** @page corrade-changelog Changelog
+
+@tableofcontents
+
+@anchor corrade-changelog-latest
+
+@section corrade-changelog-2019-10 2019.10
+
+Released 2019-10-24, tagged as
+[v2019.10](https://github.com/mosra/corrade/releases/tag/v2019.10).
+
+@subsection corrade-changelog-2019-10-dependencies Dependency changes
+
+-   Minimal supported CMake version is now 3.4. Older versions are not
+    supported anymore and all workarounds for them were removed. Download a
+    prebuilt release of a newer version if you need to use Corrade on older
+    systems (such as Ubuntu 14.04 or Debian 8). This is a conservative change
+    that shouldn't affect any additional distribution compared to the CMake 3.1
+    requirement in 2019.01.
+
+@subsection corrade-changelog-2019-10-new New features
+
+-   MSVC 2019 support. It needs about the same set of workarounds as MSVC 2017,
+    which means there's a new (automatically enbaled) `MSVC2019_COMPATIBILITY`
+    CMake option, exposed further as @ref CORRADE_MSVC2019_COMPATIBILITY CMake
+    variable and preprocessor macro. See also
+    [mosra/magnum-bootstrap#18](https://github.com/mosra/magnum-bootstrap/issues/18)
+    and [mosra/magnum#343](https://github.com/mosra/magnum/pull/343).
+-   New @ref main "Corrade::Main" library for improved user experience and
+    consistent behavior on Windows platforms (see
+    [mosra/corrade#37](https://github.com/mosra/corrade/pull/37) and
+    [mosra/magnum#98](https://github.com/mosra/magnum/issues/98))
+-   When using Corrade as a CMake subproject, it now puts all binaries into a
+    common directory to simplify `PATH` handling and dynamic plugin loading.
+    For more information see @ref corrade-cmake-subproject,
+    [mosra/magnum#357](https://github.com/mosra/magnum/issues/357) and
+    [mosra/magnum-plugins#63](https://github.com/mosra/magnum-plugins/issues/63).
+-   Added @ref CORRADE_TARGET_POWERPC for detecting PowerPC architectures (see
+    [mosra/corrade#60](https://github.com/mosra/corrade/pull/60))
+-   New set of @ref CORRADE_TARGET_LIBCXX, @ref CORRADE_TARGET_LIBSTDCXX and
+    @ref CORRADE_TARGET_DINKUMWARE macros to detect the common STL
+    implementations
+-   New @ref CORRADE_BUILD_MULTITHREADED build-time option, moved from Magnum
+
+@subsubsection corrade-changelog-2019-10-new-containers Containers library
+
+-   The @ref Containers::ArrayView, @ref Containers::StaticArrayView,
+    @ref Containers::StridedArrayView, @ref Containers::Array and
+    @ref Containers::StaticArray classes are now available as single-header
+    libraries for easier integration into your projects. See
+    @ref corrade-singles for more information.
+-   Opt-in STL compatibility for @ref Containers::ArrayView,
+    @ref Containers::StaticArrayView and @ref Containers::StridedArrayView
+    classes, allowing them to be implicitly converted from @ref std::vector and
+    @ref std::array (see also [mosra/corrade#75](https://github.com/mosra/corrade/issues/75))
+-   Opt-in STL compatibility for @ref Containers::Array,
+    @ref Containers::ArrayView, @ref Containers::StaticArray,
+    @ref Containers::StaticArrayView and @ref Containers::StridedArrayView
+    allowing them to be implicitly converted to/from C++2a @ref std::span
+-   @ref Containers::StridedArrayView is now multi-dimensional with a
+    possibility of negative and zero strides, making it usable in a broader
+    range of use-cases
+-   Added convenience @ref Containers::stridedArrayView() "make functions",
+    similar to existing @ref Containers::arrayView() and
+    @ref Containers::staticArrayView()
+-   Added compile-time-sized @ref Containers::StaticArrayView::suffix() and
+    @ref Containers::StaticArray::suffix() variants
+-   Added @ref Containers::ArrayView::slice() const,
+    @ref Containers::StaticArrayView::slice() const,
+    @ref Containers::Array::slice() const and @ref Containers::StaticArray::slice() const variants that take both being and
+    end offsets at compile time (and thus also more range checking at compile
+    time)
+-   Added @ref Containers::ArrayView::except() and similar APIs to
+    @ref Containers::StaticArrayView, @ref Containers::Array,
+    @ref Containers::StaticArray and @ref Containers::StridedArrayView. It's
+    like @ref Containers::ArrayView::prefix() but taking a count of items to
+    exclude from the end instead of how much to include from the beginning.
+-   Added a @ref Containers::ArrayView<void> specialization as a mutable
+    type-erased counterpart to @ref Containers::ArrayView<const void>
+
+@subsubsection corrade-changelog-2019-10-new-pluginmanager PluginManager library
+
+-   Added a @ref CORRADE_PLUGIN_EJECT() macro doing an inverse of
+    @ref CORRADE_PLUGIN_IMPORT() for static plugins, useful mainly for testing
+    purposes
+
+@subsubsection corrade-changelog-2019-10-new-testsuite TestSuite library
+
+-   Custom @ref TestSuite comparators can now optionally save diagnostic files
+    as well as print formatted messages to the output. See
+    @ref TestSuite-Tester-save-diagnostic for more information.
+-   Added @ref TestSuite::Tester::setTestCaseTemplateName() for convenient
+    distinction of different specializations of templated test cases
+-   @ref TestSuite::Tester now warns when dynamic CPU scaling is used on Linux
+    and benchmarks are being run, as that makes the measurements rather noisy.
+    With the `--verbose` command-line option it prints further information.
+
+@subsubsection corrade-changelog-2019-10-new-utility Utility library
+
+-   @ref Utility::Debug::packed and @ref Utility::Debug::color output modifiers
+    for tighter printing of container types and printing color-like values as
+    actual 24bit ANSI color sequences
+-   New @ref Utility::Directory::append() and
+    @ref Utility::Directory::appendString() counterparts to
+    @ref Utility::Directory::write()
+-   New @ref Utility::Directory::copy() utility for zero-allocation file
+    copies.
+-   New @ref Utility::Directory::join(std::initializer_list<std::string>)
+    overload for joining a path from multiple parts at once
+-   New @ref Utility::Directory::current() utility for getting current working
+    directory
+-   New @ref Utility::Directory::isDirectory() utility for distinguishing
+    between files and directories
+-   @ref Utility::Directory::libraryLocation() as a counterpart to
+    @ref Utility::Directory::executableLocation()
+-   @ref Utility::Directory::splitExtension() as a complement to
+    @ref Utility::Directory::path() and @ref Utility::Directory::filename()
+-   New @ref Corrade/Utility/StlForwardArray.h,
+    @ref Corrade/Utility/StlForwardString.h,
+    @ref Corrade/Utility/StlForwardTuple.h and
+    @ref Corrade/Utility/StlForwardVector.h headers providing lightweight
+    forward declarations for @ref std::array, @ref std::string, @ref std::tuple
+    and @ref std::vector on platforms that have them (and including the full
+    definition otherwise). These are also available as single-header libraries
+    for easier integration into your projects. See @ref corrade-singles for
+    more information.
+-   New @ref Corrade/Utility/StlMath.h header providing bloat-free
+    @cpp #include <cmath> @ce on C++17 an up. This header is also available as
+    a single-header library for easier integration into your projects. See
+    @ref corrade-singles for more information.
+-   New @ref Utility::IsStringLike type trait
+-   Added @ref Utility::format(), an alternative to @ref Utility::formatString()
+    returning @ref Containers::Array instead of @ref std::string
+-   @ref Utility::Debug scoped output redirection and coloring is now done
+    thread-local by default (see
+    [mosra/corrade#66](https://github.com/mosra/corrade/pull/66))
+-   Added @ref Utility::Debug::defaultOutput(),
+    @ref Utility::Warning::defaultOutput() and
+    @ref Utility::Error::defaultOutput() for easy redirection back to the
+    default output
+-   @ref Utility::Arguments is now able to ignore unknown options in the
+    prefixed variant
+-   Added @ref Utility::Arguments::addFinalOptionalArgument(), combining the
+    best of arguments and options together in one wonderful feature
+-   @ref Utility::FileWatcher learned to optionally ignore stat errors (for
+    example if the file is missing) and to optionally not signal a change if
+    the file is empty; @ref Utility::Tweakable is using these features for more
+    robustness
+-   Added @ref Utility::String::partition() and @ref Utility::String::rpartition() "rpartition()",
+    equivalent to Python's @cb{.py} str.partition() @ce
+-   New @ref CORRADE_FUNCTION utility macro for a portable C++11 @cpp __func__ @ce
+-   New @ref CORRADE_LINE_STRING utility macro for a stringified @cpp __LINE__ @ce
+-   New @ref CORRADE_THREAD_LOCAL macro for a portable @cpp thread_local @ce
+    annotation
+-   New @ref CORRADE_ALWAYS_INLINE and @ref CORRADE_NEVER_INLINE annotations
+    for easier overriding of optimizer behavior
+-   New @ref CORRADE_VISIBILITY_INLINE_MEMBER_EXPORT visibility macro to aid
+    codebases compiled with `-fvisibility-inlines-hidden`; the
+    @ref CORRADE_VISIBILITY_EXPORT and friends are now also properly documented
+-   Added a @ref CORRADE_NOOP() macro for a portable way to define out function
+    macros on compiler command line.
+
+@subsection corrade-changelog-2019-10-changes Changes and improvements
+
+-   Global state used by @ref PluginManager::Manager, @ref Utility::Debug and
+    @ref Utility::Resource internals is no longer duplicated when Corrade is
+    built statically and linked to more than one dynamic library or executable.
+    This works on all platforms except for Python bindings on Windows at the
+    moment, where the workaround is to build Corrade dynamically.
+-   @ref PluginManager::Manager and @ref Utility::Debug now have the global
+    state thread-local when the @ref CORRADE_BUILD_MULTITHREADED option is
+    enabled (see also [mosra/corrade#65](https://github.com/mosra/corrade/issues/65))
+
+@subsubsection corrade-changelog-2019-10-changes-containers Containers library
+
+-   It's now possible to create @ref Containers::ScopeGuard without a handle
+    in order to easily call a global function or lambda on scope end
+-   Implicit memory management of @ref Containers::LinkedList can be now
+    overriden by reimplementing @ref Containers::LinkedListItem::erase()
+-   The @ref CORRADE_ENUMSET_FRIEND_OPERATORS() macro now works with templated
+    classes and doesn't need a corresponding @ref CORRADE_ENUMSET_OPERATORS()
+    to be present anymore
+-   @ref Containers::StaticArray is now copyable and movable if the underlying
+    type is copyable / movable as well, to make it useful in more use cases.
+    Note that currently, same as with @ref Containers::Optional,
+    @ref std::is_copy_constructible etc. don't properly report @cpp false @ce
+    for non-copyable / non-movable types. That'll get fixed in a future
+    release.
+
+@subsubsection corrade-changelog-2019-10-changes-Interconnect Interconnect library
+
+-   The @ref Interconnect library internals got reworked with less allocations,
+    better memory usage, improved signal emitting performance and support for
+    connecting to arbitrary function objects along with @ref std::function. See
+    also [mosra/corrade#63](https://github.com/mosra/corrade/pull/63) for more
+    information.
+
+@subsubsection corrade-changelog-2019-10-changes-pluginmanager PluginManager library
+
+-   Instantiating a @ref PluginManager::Manager without an explicit plugin
+    directory will only print a warning about no dynamic plugins found if
+    there's no statically linked plugin either. That makes it behave better on
+    setups where all plugins are always linked statically.
+-   @ref PluginManager::Manager now explicitly checks for presence of a
+    plugin metadata file for dynamic plugins and fails with
+    @ref PluginManager::LoadState::WrongMetadataFile if it's not found.
+    Previously it was silently ignoring missing metadata files, often resulting
+    in a runtime linker error due to a dependency not being loaded.
+-   @ref CORRADE_PLUGIN_REGISTER() now operates completely without heap access,
+    making it safe to run in restricted phases of application execution
+-   @ref PluginManager::AbstractPlugin now implements a destructive move
+    constructor
+
+@subsubsection corrade-changelog-2019-10-changes-testsuite TestSuite library
+
+-   When a test executed through CTest fails on Android, the uploaded test
+    executable is kept in `/data/local/tmp` so it's possible to debug it
+    manually later. See the @ref TestSuite-Tester-running-cmake "Android testing docs"
+    for more information.
+-   Android tests ran through CTest have stderr redirected to stdout because
+    otherwise the `adb` bridge causes them to be extremely out-of-sync
+-   @ref TestSuite::Tester::testCaseId(),
+    @ref TestSuite::Tester::testCaseInstanceId() and
+    @ref TestSuite::Tester::testCaseRepeatId() are now expected to be called
+    only from within actual (instanced, repeated) test cases instead of
+    silently giving back an undefined value, making mistakes harder to spot
+
+@subsubsection corrade-changelog-2019-10-changes-utility Utility library
+
+-   Assertion messages now ignore @ref Utility::Error output redirection to
+    ensure the application never aborts without a message
+-   @ref Utility::Debug output behavior can be now configured using new
+    @ref Utility::Debug::setFlags() and @ref Utility::Debug::setImmediateFlags()
+    in addition to output modifiers such as @ref Utility::Debug::nospace
+-   @ref Utility::Debug prints nested containers separated with a newline for
+    more readable output
+-   @ref CORRADE_ASSERT_UNREACHABLE() now compiles into a compiler builtin on
+    MSVC as well
+-   @ref Utility::format() now prints @cpp enum @ce values implicitly
+    convertible to integers as integers without requiring the user to do an
+    explicit cast first
+-   @ref Utility::Configuration internals were rewritten to not use exceptions
+    anymore
+-   The @ref CORRADE_AUTOMATIC_INITIALIZER() and
+    @ref CORRADE_AUTOMATIC_FINALIZER() macros can now be overriden for testing
+    purposes or when global constructors / destructors are not desired.
+-   @ref Utility::Resource internals now operate completely without heap
+    access, its APIs now also have overloads taking plain C string literals
+    instead of @ref std::string
+-   @ref Utility::String::join() and
+    @ref Utility::String::joinWithoutEmptyParts() overloads taking a
+    @cb{.cpp} char @ce array and a @ref std::string for the delimiter in
+    addition to a single @cb{.cpp} char @ce
+
+@subsection corrade-changelog-2019-10-buildsystem Build system
+
+-   @ref building-corrade-packages-msys "MSYS2 packages" are now in official
+    repositories, installable directly via `pacman`
+-   The @ref CORRADE_CXX_STANDARD preprocessor macro learned support for the
+    upcoming C++2a standard. The equivalent CMake property can now be set to
+    @cpp 20 @ce to pass the `-std=c++2a` flag to GCC and Clang and
+    `/std:c++latest` to MSVC.
+-   It's now possible to use the @ref TestSuite library via CMake subprojects
+    also on Android, iOS and Emscripten
+-   Explicitly disabling a MSVC linker optimization that causes seemingly
+    similar signals to be conflated together, causing erratic behavior. This is
+    done automatically for CMake-based projects, see the
+    @ref Interconnect-Emitter-msvc-icf "Interconnect::Emitter" documentation
+    for more information when using custom buildsystems, see also
+    [mosra/corrade#51](https://github.com/mosra/corrade/issues/51).
+-   Fixed compilation with Clang and `-std=gnu++14` (see [mosra/corrade#62](https://github.com/mosra/corrade/pull/62)
+-   @ref CORRADE_VISIBILITY_STATIC no longer exports symbols in static
+    libraries to be consistent with hidden visibility by default, additionally
+    `-fvisibility-inlines-hidden` is passed along with `-fvisibility=hidden`
+    when @ref corrade-cmake "CORRADE_USE_PEDANTIC_FLAGS" property is enabled in
+    CMake on GCC and Clang to avoid linker warnings on macOS (see
+    [mosra/corrade#53](https://github.com/mosra/corrade/issues/53))
+-   The Emscripten CMake toolchain now sets the `EMSCRIPTEN` variable to help
+    3rd party projects (see [mosra/toolchains#7](https://github.com/mosra/toolchains/pull/7))
+-   The Emscripten CMake toolchain now looks for `emcc` on @cb{.sh} $PATH @ce
+    as a last resort and then uses the parent directory as `EMSCRIPTEN_PREFIX`
+    (see [mosra/toolchains#8](https://github.com/mosra/toolchains/pull/8))
+-   On Windows, if the Emscripten toolchain detects Visual Studio being used
+    as a generator, it'll fail with an error suggesting to use a different
+    generator instead. Previously, CMake silently fell back to using Visual
+    Studio as a C++ compiler, resulting in seemingly impossible errors. See
+    [mosra/corrade#78](https://github.com/mosra/corrade/issues/78).
+-   Clarified interaction of `-fvisibility-inlines-hidden` and/or
+    `-Wl,-Bsymbolic-functions` GCC/Clang flags and @ref Interconnect::Emitter
+-   The @ref TestSuite library and all tests created with
+    @ref corrade-cmake-add-test "corrade_add_test()" are now built with
+    `-s DISABLE_EXCEPTION_CATCHING=0` being explicitly specified both for the
+    compiler and linker to work correctly on Emscripten 1.38.36 and newer
+-   Emscripten builds now have the `-fPIC` option disabled by default as it
+    causes linker errors related to `__memory_base` on 1.38.36 (see also
+    [emscripten-core/emscripten#8761](https://github.com/emscripten-core/emscripten/issues/8761))
+-   Fixed dynamic plugin metadata location when `CMAKE_LIBRARY_OUTPUT_DIRECTORY`
+    is set (see [mosra/corrade#74](https://github.com/mosra/corrade/pull/74))
+-   With CMake 3.15 there's an unfortunate collision between
+    `CORRADE_CXX_STANDARD` and CMake's own `COMPILE_FEATURES` target property,
+    where a request to use C++14 from a 3rd party library would get ignored
+    with C++11 being used instead. To fix that, the `CORRADE_CXX_STANDARD`
+    property does nothing if the `COMPILE_FEATURES` property is set on the
+    target as well. See @ref corrade-cmake for more information.
+-   Fixed @ref corrade-cmake-add-test "corrade_add_test()" when library output
+    path is set in CMake (see [mosra/corrade#77](https://github.com/mosra/corrade/pull/77))
+-   Plugin metadata are now copied next to the binary as a post-build command
+    instead of only during a full build
+-   Updated the iOS toolchain to make @cmake find_package(Threads) @ce work
+    correctly
+
+@subsection corrade-changelog-2019-10-bugfixes Bug fixes
+
+-   The @ref TestSuite::Comparator class by mistake did not have fuzzy
+    comparison for @cpp long double @ce
+-   Fixed @ref TestSuite::Compare::around() for types that don't have a total
+    ordering (for example, for Magnum matrix and vector types, @cpp !(a < b) @ce
+    might not neccesarily imply that @cpp a >= b @ce).
+-   Fixed build on big-endian platforms (see
+    [mosra/corrade#58](https://github.com/mosra/corrade/pull/58))
+-   Fixed @ref Utility::Sha1 calculation on big-endian platforms (see
+    [mosra/corrade#60](https://github.com/mosra/corrade/pull/60))
+-   Fixed @ref Utility::Directory::read() to not use `ftello()` on 32-bit
+    Android and API levels below 24
+-   Fixed @ref Utility::Directory::read() to work with files that report an
+    early EOF (such as stuff from `/sys` on Linux)
+-   Fixed @ref Interconnect::Emitter::emit() for signals from
+    multiply-inherited base classes on MSVC --- it was due to an insufficiently
+    tested workaround for a template deduction limitation in the compiler (see
+    [mosra/corrade#51](https://github.com/mosra/corrade/issues/51))
+-   @ref Interconnect::Emitter::emit() now works correctly on MSVC for signals
+    from classes where multiple and/or virtual inheritance is involved (see
+    [mosra/corrade#51](https://github.com/mosra/corrade/issues/51))
+-   Fixed @ref CORRADE_COMPARE_WITH() to be callable with expressions such as
+    @cpp *comparator @ce
+-   Fixed @ref Utility::Tweakable to work correctly with buildsystems using
+    absolute paths for `__FILE__` macros (such as Makefiles, Ninja is using
+    relative paths). See [mosra/corrade#61](https://github.com/mosra/corrade/issues/61).
+-   In some corner cases, automatic registering / unregistering of
+    @ref Utility::Resource data happens more than once. While this was allowed
+    for registration, the unregistration caused an assert to be fired. Fixed
+    this to be allowed on both.
+-   @ref Utility::Directory::copy() wasn't properly freeing both opened files
+    if one of them failed to open (see [mosra/corrade#70](https://github.com/mosra/corrade/pull/70))
+-   @ref Interconnect::Emitter::emit() (and signal/slot connections in general)
+    now work correctly with non-copyable arguments
+-   Fixed @ref Utility::Debug::isTty() (and thus also @ref TestSuite colored
+    output) to reliably work on macOS. Because Xcode output window doesn't
+    support ANSI color escape codes, tt was relying on an undocumented
+    @cb{.sh} $XPC_SERVICE_NAME @ce variable that was always defined inside
+    Xcode to disable colored output. Nowadays this variable is sometimes
+    defined outside as well, making the check unreliable. Fixed by testing for
+    @cb{.sh} $TERM @ce instead, see
+    [mosra/corrade#73](https://github.com/mosra/corrade/issues/73) for more
+    information.
+
+@subsection corrade-changelog-2019-10-deprecated Deprecated APIs
+
+-   Single-argument @cpp Utility::Arguments::setHelp() @ce is now deprecated in
+    favor of @ref Utility::Arguments::setGlobalHelp() to avoid it being used
+    for documenting named arguments by accident.
+-   @cpp Utility::Directory::fileExists() @ce is now deprecated in favor of
+    @ref Utility::Directory::exists(). It was named like this to prevent it
+    from looking like it works on directories only, but such name then caused
+    people to ask if it works on directories as well, not helping anything.
+-   `Interconnect::Connection::isConnected()` and
+    `Interconnect::Connection::disconnect()` are deprecated and print a warning
+    at runtime as the redesigned internals of the @ref Interconnect library now
+    make it impossible to check that the original @ref Interconnect::Emitter
+    object still exists. Use @ref Interconnect::Emitter::isConnected() and
+    @ref Interconnect::disconnect() instead.
+-   Re-connecting a disconnected signal using
+    `Interconnect::Connection::isConnectionPossible()` and
+    `Interconnect::Connection::connect()` is not possible anymore in order
+    to make the @ref Interconnect library more efficient. These two functions
+    are now deprecated and just returningthe value of (also deprecated)
+    `isConnected()`.
+-   Signatures of @ref TestSuite::Comparator methods were changed in order to
+    support new features. The old variant with
+    @ref TestSuite::Comparator::operator()() "operator()()" returning a
+    @cpp bool @ce and @cpp printErrorMessage() @ce instead of
+    @ref TestSuite::Comparator::printMessage() "printMessage()" is still
+    supported for backwards compatibility but custom comparators are strongly
+    advised to upgrade
+
+@subsection corrade-changelog-2019-10-compatibility Potential compatibility breakages, removed APIs
+
+-   @cpp Containers::StridedArrayView<T> @ce is now
+    @ref Containers::StridedArrayView "Containers::StridedArrayView<dimensions, T>"
+    and all code that was using it directly before needs to be changed to use
+    @ref Containers::StridedArrayView1D<T> instead; the constructor is also
+    changed to take a linear array view in addition for better bounds checking
+-   Support for @ref std::tuple and @ref std::string in
+    @ref Utility::Debug is now provided through a separate header,
+    @ref Corrade/Utility/DebugStl.h, to speed up compile times. Since including
+    it for backwards compatibility would practically revert the optimization,
+    you have to @cpp #include @ce it explicitly where needed.
+-   @ref Utility::formatString(), @ref Utility::formatInto() taking a
+    @ref std::string and support for formatting @ref std::string through the
+    @ref Utility::format() family of APIs is now provided through a separate
+    header, @ref Corrade/Utility/FormatStl.h, to speed up compile times. Since
+    including it for backwards compatibility would practically revert the
+    optimization, you have to @cpp #include @ce it explicitly where needed.
+-   @ref TestSuite::Compare::SortedContainer was split from the
+    @ref Corrade/TestSuite/Compare/Container.h header into
+    @ref Corrade/TestSuite/Compare/SortedContainer.h to isolate the heavy
+    `<algorithm>` include. Backwards compatibility is not provided in order to
+    reduce compile times, please include the new header now.
+-   The @ref CORRADE_ENUMSET_FRIEND_OPERATORS() macro now provides both
+    declarations and definitions of enum set operators. This means it has to be
+    used alone, without @ref CORRADE_ENUMSET_OPERATORS(), as that would lead to
+    duplicate definitions.
+-   The `CORRADE_BENCHMARK`, `CORRADE_BENCHMARK_DISCARD`,
+    `CORRADE_BENCHMARK_YELLOW` and `CORRADE_BENCHMARK_RED` environment
+    variables used by @ref TestSuite::Tester were renamed to
+    `CORRADE_TEST_BENCHMARK`, `CORRADE_TEST_BENCHMARK_DISCARD`,
+    `CORRADE_TEST_BENCHMARK_YELLOW` and `CORRADE_TEST_BENCHMARK_RED` to be
+    consistent with remaining variables understood by test suite executables.
+
+@subsection corrade-changelog-2019-10-documentation Documentation
+
+-   Updated docs of the @ref Corrade/Utility/Macros.h header mentioning what
+    @ref CORRADE_DEPRECATED() macros work on what compiler (see
+    [mosra/corrade#46](https://github.com/mosra/corrade/issues/46))
+-   Fixed Gentoo build instructions (see
+    [mosra/corrade#64](https://github.com/mosra/corrade/pull/64))
+-   Various other doc updates (see
+    [mosra/corrade#69](https://github.com/mosra/corrade/pull/69),
+    [mosra/corrade#71](https://github.com/mosra/corrade/pull/71) and
+    [mosra/corrade#76](https://github.com/mosra/corrade/pull/76))
+
+@section corrade-changelog-2019-01 2019.01
+
+Released 2019-02-04, tagged as
+[v2019.01](https://github.com/mosra/corrade/releases/tag/v2019.01).
+
+@subsection corrade-changelog-2019-01-dependencies Dependency changes
+
+-   Minimal supported GCC version is now 4.8.1, GCC 4.7 is not supported
+    anymore. Minimal Clang version is now 3.3, since that's the first version
+    with a complete C++11 support. See also
+    [mosra/magnum#274](https://github.com/mosra/magnum/issues/274).
+-   Minimal supported CMake version is now 3.1. Older versions are not
+    supported anymore and all workarounds for them were removed. Download a
+    prebuilt release of a newer version if you need to use Corrade on older
+    systems (such as Ubuntu 14.04 or Debian 8). See also
+    [mosra/magnum#274](https://github.com/mosra/magnum/issues/274).
+
+@subsection corrade-changelog-2019-01-new New features
+
+-   Various Corrade features are now being available also as single-header
+    libraries for easier integration into your projects. See
+    @ref corrade-singles for more information.
+
+@subsubsection corrade-changelog-2019-01-new-containers Containers library
+
+-   New @ref Containers::Pointer class, a lightweight equivalent to
+    @ref std::unique_ptr
+-   New @ref Containers::Reference class, a lightweight equivalent to
+    @ref std::reference_wrapper
+-   New @ref Containers::NoCreate tag for constructing instances
+    equivalent to a moved-from state. This tag was used in Magnum already,
+    moving it here to make it available to a wider set of APIs.
+-   New @ref Containers::optional(Args&&... args) overload for in-place
+    initialization
+-   Added r-value overloads to @ref Containers::Optional::operator*() allowing
+    you to easily take the value out of a r-value optional
+-   Opt-in STL compatibility for @ref Containers::Optional, allowing for
+    explicit conversion from and to @ref std::optional in C++17
+-   New @ref Containers::arrayCast(const StridedArrayView<dimensions, T>&) "Containers::arrayCast(StridedArrayView<T>)"
+    overload for casting strided array views
+
+@subsubsection corrade-changelog-2019-01-new-utility Utility library
+
+-   Asserts from the @ref Corrade/Utility/Assert.h can now use the standard
+    @cpp assert() @ce if @ref CORRADE_STANDARD_ASSERT is defined
+-   It's now possible to provide custom implementation for any assertion macro
+    from @ref Corrade/Utility/Assert.h by placing a @cpp #define @ce before
+    including the header
+-   Initial implementation of a @ref Utility::FileWatcher utility for
+    monitoring changes to a file (see also [mosra/corrade#54](https://github.com/mosra/corrade/issues/54))
+-   New @ref Utility::Tweakable class, implementing tweakable constants for
+    hot-reload
+-   Added @ref Utility::print() and @ref Utility::printError() convenience
+    functions for @ref Utility::formatInto()
+-   It's now possible to print @ref std::nullptr_t with @ref Utility::Debug
+
+@subsection corrade-changelog-2019-01-changes Changes and improvements
+
+-   The @ref CORRADE_CXX_STANDARD macro has been moved to the top-level
+    @ref Corrade/Corrade.h from @ref Corrade/Utility/Macros.h so it's available
+    everywhere unconditionally
+
+@subsubsection corrade-changelog-2019-01-changes-containers Containers library
+
+-   The @ref Containers::StridedArrayView class is now @cpp constexpr @ce,
+    allowing it to be used to describe data layout at compile-time
+-   The @ref Containers::ArrayView::end() "end()" and
+    @ref Containers::ArrayView::cend() "cend()" APIs in
+    @ref Containers::ArrayView and @ref Containers::StaticArrayView are now
+    @cpp constexpr @ce the same way @ref Containers::ArrayView::begin() "begin()"
+    / @ref Containers::ArrayView::cbegin() "cbegin()" is
+-   Slicing APIs in @ref Containers::ArrayView and
+    @ref Containers::StaticArrayView are now @cpp constexpr @ce
+-   Bounds checking in compile-time-sized
+    @ref Containers::StaticArray::prefix() and
+    @ref Containers::StaticArrayView::prefix() is now done at compile time as
+    well
+-   The "initializer list" @ref Containers::StaticArray::StaticArray(Args&&... args)
+    constructor is now implicit instead of explicit for easier use
+
+@subsubsection corrade-changelog-2019-01-changes-pluginmanager PluginManager library
+
+-   The @ref PluginManager::Manager::instantiate() and
+    @ref PluginManager::Manager::loadAndInstantiate() functions now return
+    @ref Containers::Pointer instead of @ref std::unique_ptr for improved
+    compile times
+-   Plugin interfaces now have the
+    @ref PluginManager::AbstractPlugin::pluginInterface() "pluginInterface()"
+    function optional to make implementing hot-reload interfaces less verbose
+
+@subsubsection corrade-changelog-2019-01-changes-utility Utility library
+
+-   Prefixed or prefix-ignoring @ref Utility::Arguments now work better with
+    3rd party argument parsers which may be less restrictive about argument
+    name format; arguments that are ignored are not checked for key validity
+    anymore (see [mosra/magnum#305](https://github.com/mosra/magnum/issues/305))
+
+@subsection corrade-changelog-2019-01-buildsystem Build system
+
+-   Corrade now has a [Conan](https://conan.io/) package. See
+    @ref building-corrade-packages-conan for more information. See also
+    [mosra/corrade#57](https://github.com/mosra/corrade/pull/57).
+-   Corrade is now available through [Hunter](https://hunter.sh) CMake-driven
+    package manager. See @ref building-corrade-packages-hunter for more
+    information. See also [mosra/magnum#298](https://github.com/mosra/magnum/pull/298).
+-   The `package/msys` directory now contains `PKGBUILD`s for
+    [MSYS2](https://www.msys2.org/). See @ref building-corrade-packages-msys
+    for more information. See also [mosra/corrade#56](https://github.com/mosra/corrade/pull/56).
+
+@subsection corrade-changelog-2019-01-bugfixes Bug fixes
+
+-   It was not possible to use @ref TestSuite::Compare::File with
+    @ref CORRADE_COMPARE_WITH() because its symbols were not exported by
+    mistake
+-   The `FILES` section in @ref corrade-cmake-add-test "corrade_add_test()" was
+    mistakenly ignored everywhere except Android and Emscripten, making
+    cross-platform testing more prone to errors. Now `ctest` properly fails
+    when the `FILES` section contains a file that doesn't exist.
+-   The @ref Containers::ArrayView::operator bool() and
+    @ref Containers::StaticArrayView::operator bool() operators were not
+    @cpp constexpr @ce by accident
+
+@subsection corrade-changelog-2019-01-deprecated Deprecated APIs
+
+-   @cpp Containers::ScopedExit @ce is deprecated, use
+    @ref Containers::ScopeGuard instead
+-   All uses of @ref std::unique_ptr are replaced with @ref Containers::Pointer
+    (affecting mainly the @ref PluginManager::Manager class). The types are
+    implicitly move-convertible to each other if the
+    @ref Corrade/Containers/PointerStl.h header is included. The header is
+    included where needed if @ref CORRADE_BUILD_DEPRECATED is enabled. To
+    ensure your code keeps with future versions of Magnum, either switch your
+    code to use @ref Containers::Pointer as well or include the
+    @ref Corrade/Containers/PointerStl.h header explicitly.
+
+@subsection corrade-changelog-2019-01-compatibility Potential compatibility breakages, removed APIs
+
+-   Removed @cpp Containers::ArrayReference @ce, which was deprecated since 2015.
+    Use @ref Containers::ArrayView instead.
+-   Removed @cpp Containers::Array::zeroInitialized() @ce and
+    @cpp Containers::Array::from() @ce, which were deprecated since 2015. Use
+    @ref Containers::Array::Array(ValueInitT, std::size_t) and
+    @ref Containers::Array::Array(InPlaceInitT, std::initializer_list<T>)
+    instead.
+-   Removed @cpp Utility::Arguments::setHelpKey() @ce, which was deprecated
+    since 2016. Its functionality was merged into
+    @ref Utility::Arguments::setHelp().
+-   Removed @cpp Utility::Debug::setOutput() @ce, which was deprecated since
+    2016 and superseded by @ref Utility::Debug scoped output
+-   Removed @cpp Utility::Debug::noNewlineAtTheEnd() @ce, which was deprecated
+    since 2016 and superseded by @ref Utility::Debug::Flag::NoNewlineAtTheEnd
+-   Removed @cpp Utility::sleep() @ce which was deprecated since 2016. Use
+    @ref Utility::System::sleep() instead.
+-   Removed @cpp TestSuite::Tester::BenchmarkType::WallClock @ce,
+    @cpp TestSuite::Tester::BenchmarkUnits::Time @ce and
+    @cpp TestSuite::Tester::BenchmarkUnits::Memory @ce which were deprecated
+    since January 2017, not long after introducing the benchmark functionality
+    itself. Use @ref TestSuite::Tester::BenchmarkType::WallTime,
+    @ref TestSuite::Tester::BenchmarkUnits::Nanoseconds and
+    @ref TestSuite::Tester::BenchmarkUnits::Bytes instead.
+-   Removed `CORRADE_*_LIBRARIES` and `CORRADE_*_INCLUDE_DIRS` CMake variables,
+    which were deprecated in favor of `Corrade::*` imported targets in 2016.
+    The deprecated `CORRADE_CXX_FLAGS` variable is still present, however.
+
+@subsection corrade-changelog-2019-01-documentation Documentation
+
+-   The user-definable macros @ref CORRADE_NO_ASSERT and
+    @ref CORRADE_GRACEFUL_ASSERT now have dedicated documentation, instead of
+    being casually mentioned on various places and impossible to search for.
+
+@section corrade-changelog-2018-10 2018.10
+
+Released 2018-10-23, tagged as
+[v2018.10](https://github.com/mosra/corrade/releases/tag/v2018.10).
+
+@subsection corrade-changelog-2018-10-new New features
+
+@subsubsection corrade-changelog-2018-10-new-containers Containers library
+
+-   New @cpp Containers::ScopedExit @ce helper class
+-   New @ref Containers::StridedArrayView class for providing access to
+    interleaved data
+-   New @ref Containers::ArrayView::front() "front()" and
+    @ref Containers::ArrayView::back() "back()" accessors for all array and
+    array view types
+-   Added @ref Containers::Optional::operator=(NullOptT) for resetting an
+    optional value without requiring the type to be movable
+-   Added fixed-size @ref Containers::ArrayView::prefix() const "prefix()"
+    overload to all Array classes
+
+@subsubsection corrade-changelog-2018-10-new-pluginmanager PluginManager library
+
+-   Ability to change plugin-specific configuration globally using
+    @ref PluginManager::PluginMetadata::configuration() --- compared to
+    modifying instance-specific configuration through
+    @ref PluginManager::AbstractPlugin::configuration(), this can be done even
+    before a plugin is loaded and affects all plugin instances loaded later
+    through the same manager
+
+@subsubsection corrade-changelog-2018-10-new-utility Utility library
+
+-   New @ref Utility::formatString() and @ref Utility::formatInto() functions
+    for Python-style zero-allocation string formatting
+-   Added @ref Utility::Arguments::prefix(), @ref Utility::Arguments::isParsed()
+-   New @ref Utility::String::viewBeginsWith() and
+    @ref Utility::String::viewEndsWith() utilities that take
+    @ref Containers::ArrayView instead of @ref std::string as a first parameter
+-   New @ref Utility::String::replaceFirst() and
+    @ref Utility::String::replaceAll() utilities for replacing substrings
+
+@subsection corrade-changelog-2018-10-changes Changes and improvements
+
+@subsubsection corrade-changelog-2018-10-changes-containers Containers library
+
+-   It's no longer a compile error to call @ref Containers::arrayView() /
+    @ref Containers::staticArrayView() on a type that's already an
+    @ref Containers::ArrayView / @ref Containers::StaticArrayView
+
+@subsubsection corrade-changelog-2018-10-changes-pluginmanager PluginManager library
+
+-   Plugins are now loaded from the filesystem in an alphabetical order for
+    predictable behavior across different systems
+
+@subsubsection corrade-changelog-2018-10-changes-testsuite TestSuite library
+
+-   Adapted Emscripten test runner markup for consistency with the
+    [m.css](http://mcss.mosra.cz) theme used in [Magnum](https://magnum.graphics)
+-   It's now possible to have non-copyable and non-moveable
+    @ref TestSuite::Comparator specializations
+
+@subsubsection corrade-changelog-2018-10-changes-utility Utility library
+
+-   @ref Utility::Arguments::value() and @ref Utility::Arguments::isSet() now
+    check that the arguments were already successfully parsed to prevent
+    accidentally forgotten calls to @ref Utility::Arguments::parse()
+-   @ref Utility::Arguments is now move-only to avoid accidental copies ---
+    it's not meant to be used as a general storage for parsed arguments, only a
+    parser
+-   @ref Utility::String::stripPrefix() and @ref Utility::String::stripSuffix()
+    have now zero-allocation implementation
+
+@subsection corrade-changelog-2018-10-buildsystem Build system
+
+-   There's now a PPA for Ubuntu packages. See @ref building-corrade-packages-deb
+    for more information.
+-   The @ref corrade-rc utility is now fully standalone even with shared builds
+    to minimize annoying first-time-use issues. It's also possible to build
+    just this utility without anything else for example for crosscompiling, by
+    enabling only `WITH_RC` and disabling all other @ref corrade-cmake "CMake"
+    options.
+-   Due to changes in Xcode 10, CMake before 3.12 would fail during the build
+    of Corrade. To prevent that, when Xcode 10 is detected, the build aborts
+    with a clear message upfront, telling the user to upgrade to CMake 3.12.
+    See [mosra/corrade#52](https://github.com/mosra/corrade/issues/52) and
+    [cmake/cmake#18099](https://gitlab.kitware.com/cmake/cmake/issues/18099).
+
+@subsection corrade-changelog-2018-10-bugfixes Bug fixes
+
+-   Calling @ref PluginManager::Manager::setPluginDirectory() could lead to
+    plugin aliases being forgotten in some cases
+-   Worked around a misoptimization of @ref Utility::Sha1 when using GCC 6 with
+    -O3 on Raspberry Pi Model 3 B+ (AArch64) (GCC 8 works properly again). See
+    [mosra/corrade#45](https://github.com/mosra/corrade/issues/45).
+-   It was not possible to use the @ref Interconnect::Emitter class with
+    virtual base classes on 32-bit Windows due to an incorrect assumption about
+    member function pointer sizes (see
+    [mosra/magnum-extras#7](https://github.com/mosra/magnum-extras/issues/7))
+-   Assertions were not removed if both @ref CORRADE_NO_ASSERT and
+    @ref CORRADE_GRACEFUL_ASSERT was defined
+
+@subsection corrade-changelog-2018-10-docs Documentation
+
+-   All code snippets are now compiled, ensuring no deprecated APIs are used
+    and no accidental compile errors are present
+-   @ref TestSuite::Comparator documentation mistakenly stated that it's
+    possible to have multiple @cpp operator()() @ce overloads for a single
+    pseudo-type. Due to implementation limitations it's not.
+
+@section corrade-changelog-2018-04 2018.04
+
+Released 2018-05-01, tagged as
+[v2018.04](https://github.com/mosra/corrade/releases/tag/v2018.04).
+
+@subsection corrade-changelog-2018-04-dependencies Dependency changes
+
+-   Building for Android now requires CMake 3.7 with builtin Android
+    crosscompilation support, the old toolchains were removed. Only the Clang
+    and libc++ toolchain is now supported, support for GCC and libstdc++ was
+    dropped, as it was still missing some important C++11 functionality. See
+    @ref building-corrade-cross-android for more information.
+
+@subsection corrade-changelog-2018-04-new New features
+
+-   New @ref CORRADE_PLUGINMANAGER_NO_DYNAMIC_PLUGIN_SUPPORT preprocessor
+    @cpp #define @ce and CMake variable for easier distinction of platforms
+    without dynamic plugin loading support
+
+@subsubsection corrade-changelog-2018-04-new-pluginmanager PluginManager library
+
+-   New @ref PluginManager::AbstractPlugin::pluginSearchPaths() interface
+    allowing plugin interfaces to specify plugin search paths to make life
+    simpler for the end user
+-   Added @ref PluginManager::AbstractManager::aliasList() for listing all
+    available plugin aliases
+-   Ability to control what plugin is used for given alias using
+    @ref PluginManager::AbstractManager::setPreferredPlugins() (see
+    [mosra/magnum-plugins#25](https://github.com/mosra/magnum-plugins/issues/25))
+-   Ability to configure extra plugin functionality via
+    @ref PluginManager::AbstractPlugin::configuration()
+-   Ability to load plugins outside of the plugin directory by supplying a file
+    path to @ref PluginManager::AbstractManager::load()
+
+@subsubsection corrade-changelog-2018-04-new-testsuite TestSuite library
+
+-   When compiling for Emscripten, the @ref corrade-cmake-add-test "corrade_add_test()"
+    macro now generates a HTML runner for running each test case in a web
+    browser. See @ref TestSuite-Tester-running-emscripten-browser for more
+    information.
+-   @ref corrade-cmake-add-test "corrade_add_test()" learned a new `ARGUMENTS`
+    option for passing additional arguments to test executables
+
+@subsubsection corrade-changelog-2018-04-new-utility Utility library
+
+-   Ability to query current scoped output stream using @ref Utility::Debug::output(),
+    @ref Utility::Warning::output() and @ref Utility::Error::output()
+-   New @ref CORRADE_DEPRECATED_NAMESPACE() and @ref CORRADE_DEPRECATED_FILE()
+    macros
+-   New @ref CORRADE_IGNORE_DEPRECATED_PUSH and @ref CORRADE_IGNORE_DEPRECATED_POP
+    macros useful for writing and testing APIs that need to use deprecated
+    functionality
+-   New @ref CORRADE_ASSERT_OUTPUT() macro as an user-friendly counterpart to
+    @ref CORRADE_INTERNAL_ASSERT_OUTPUT()
+-   New @ref CORRADE_CONSTEXPR_ASSERT() and @ref CORRADE_INTERNAL_CONSTEXPR_ASSERT()
+    macros for use in C++11 constexpr functions
+-   @ref String::beginsWith() and @ref String::endsWith() overloads taking just
+    a single @cpp char @ce
+-   @ref String::ltrimInPlace(), @ref String::rtrimInPlace() and
+    @ref String::trimInPlace() for easier operation on mutable strings. The
+    @ref String::ltrim(), @ref String::rtrim() and @ref String::trim()
+    functions are now implemented using these.
+-   @ref String::stripPrefix() and @ref String::stripSuffix() for checked
+    prefix and suffix stripping
+
+@subsection corrade-changelog-2018-04-buildsystem Build system
+
+-   Stable version of Corrade is now available as a binary package in the
+    ArchLinux `[community]` repo
+-   Homebrew macOS packages were updated to install the stable version by
+    default
+-   Fixed the Debian package to not include a revision. While just a warning on
+    Ubuntu, it's a hard error on Debian. (See [mosra/corrade#44](https://github.com/mosra/corrade/issues/44).)
+
+@subsection corrade-changelog-2018-04-bugfixes Bug fixes
+
+-   The Android ADB test runner was not correctly propagating @ref TestSuite
+    `CORRADE_TEST_*` environment variables to the executable
+-   Wrong destruction order of @ref PluginManager::Manager instances could lead
+    to an infinite loop if cross-manager plugin dependencies were involved. Now
+    an assertion fires instead.
+-   Fixed usage of @ref Utility::ConfigurationValue specializations to support
+    types without default constructors and be able to return
+    non-default-constructed instances for empty values.
+
+@subsection corrade-changelog-2018-04-deprecated Deprecated APIs
+
+-   The `Corrade/Utility/AndroidStreamBuffer.h` header is deprecated, use
+    @ref Corrade/Utility/AndroidLogStreamBuffer.h instead
+-   `PluginManager::Manager::instance()` is deprecated as it has a confusing
+    naming, use @ref PluginManager::Manager::instantiate() instead
+
+@subsection corrade-changelog-2018-04-compatibility Potential compatibility breakages, removed APIs
+
+-   Removed the unnecessarily opaque `CORRADE_PLUGIN_INTERFACE()` macro. Define
+    a @cpp public @ce @cpp static std::string pluginInterface() @ce function
+    instead. See @ref PluginManager::AbstractPlugin for more information.
+-   Moved the @ref CORRADE_PLUGIN_REGISTER() macro to
+    @ref Corrade/PluginManager/AbstractManager.h from
+    @ref Corrade/PluginManager/AbstractPlugin.h to reduce header dependencies
+
+@subsection corrade-changelog-2018-04-docs Documentation
+
+-   A new @ref corrade-developers page containing step-by-step checklists for
+    maintainers and core developers
+-   Updating the docs with compiled code snippets to ensure they don't get out
+    of sync with the code
+-   Various documentation updates, clarifications and fixes
+
+@section corrade-changelog-2018-02 2018.02
+
+Released 2018-02-15, tagged as
+[v2018.02](https://github.com/mosra/corrade/releases/tag/v2018.02). See the
+[release announcement](https://blog.magnum.graphics/announcements/2018.02/) for
+a high-level overview.
+
+@subsection corrade-changelog-2018-02-dependencies Dependency changes
+
+-   Completely removed NaCl support (see https://blog.chromium.org/2017/05/goodbye-pnacl-hello-webassembly.html)
+-   Dropped support for the old MinGW32 (only MinGW-w64 is supported now)
+-   Bumped minimal CMake version to 2.8.12
+-   Removed support for OSX 10.8 and older
+-   Dropped the `compatibility` branch and all support for MSVC 2013 and GCC <
+    4.7
+
+@subsection corrade-changelog-2018-02-new New features
+
+-   MSVC 2015 and 2017 support in `master` branch. It needs some workarounds,
+    thus the compatibility is controlled using `MSVC2015_COMPATIBILITY` /
+    `MSVC2017_COMPATIBILITY` CMake option, which is then exposed as
+    @ref CORRADE_MSVC2015_COMPATIBILITY / @ref CORRADE_MSVC2017_COMPATIBILITY
+    CMake variable and preprocessor macro. See
+    [mosra/corrade#34](https://github.com/mosra/corrade/pull/34).
+-   Windows RT (Store/Phone) support. Builds for that platform have
+    @ref CORRADE_TARGET_WINDOWS_RT CMake variable and preprocessor macro
+    defined.
+-   iOS support, integration of @ref TestSuite with Xcode XCTest
+-   WebAssembly support when building for Emscripten
+
+@subsubsection corrade-changelog-2018-02-new-containers Containers library
+
+-   New @ref Containers::StaticArray class, similar to @ref Containers::Array
+    but with stack-allocated storage of compile-time size
+-   New @ref Containers::StaticArrayView class, similar to @ref Containers::ArrayView
+    but with compile-time size information
+-   New @ref Containers::Optional class, providing a subset of functionality
+    from C++17 @ref std::optional (see [mosra/corrade#36](https://github.com/mosra/corrade/pull/36))
+-   Added @ref Containers::NoInit, @ref Containers::DirectInit,
+    @ref Containers::DefaultInit, @ref Containers::ValueInit and
+    @ref Containers::InPlaceInit tags for better control over initialization of
+    @ref Containers::Array and @ref Containers::StaticArray
+-   Added @ref Containers::Array::Array(InPlaceInitT, std::initializer_list<T>)
+    to create @ref Containers::Array from an initializer list
+-   New @ref Containers::Array::Array(T*, std::size_t, D) "Containers::Array::Array(T*, std::size_t, D)"
+    constructor that allows wrapping externally allocated array with custom
+    deleter function (see [mosra/magnum-examples#20](https://github.com/mosra/magnum-examples/issues/20))
+-   New @ref Containers::arrayView() and @ref Containers::staticArrayView()
+    helper functions to make @ref Containers::ArrayView / @ref Containers::StaticArrayView
+    instances without needing to fully specify the type (similarly to what
+    @ref std::make_tuple() is to @ref std::tuple)
+-   New @ref Containers::arrayCast() function to @cpp reinterpret_cast @ce
+    arrays with correct size recalculation
+-   New @ref Containers::arraySize() helper function for easier size queries
+    on array-like types
+-   Added XOR operators to @ref Containers::EnumSet
+-   New @ref Containers::enumSetDebugOutput() utility to help with implementing
+    debug operators for @ref Containers::EnumSet types
+
+@subsubsection corrade-changelog-2018-02-new-pluginmanager PluginManager library
+
+-   Name passed to plugin constructors is now the aliased name instead of the
+    actual name, allowing the plugins to have different functionality based on
+    name with which they are loaded (for example an image converter plugin can
+    export different file format if it's loaded as `JpegImageConverter` or
+    `PngImageConverter`). New @ref PluginManager::AbstractPlugin::plugin()
+    function returns the aliased name.
+
+@subsubsection corrade-changelog-2018-02-new-testsuite TestSuite library
+
+-   Major update of @ref TestSuite library including colored output for more
+    readable output, command-line arguments for fine-grained control,
+    setup/teardown functions, instanced and repeated tests, benchmarks for
+    wall and CPU time, CPU clock, custom benchmarks, ability to override test
+    case name and description and more. See @ref TestSuite::Tester
+    documentation for more information.
+-   Ability to run @ref TestSuite tests on Android using ADB, with all relevant
+    environment variables propagated to the device/emulator
+-   Ability to run @ref TestSuite tests from within Xcode via XCTest
+-   Added @ref TestSuite::Compare::Less, @ref TestSuite::Compare::LessOrEqual,
+    @ref TestSuite::Compare::Greater, @ref TestSuite::Compare::GreaterOrEqual
+    and @ref TestSuite::Compare::Around
+-   Added @ref TestSuite::Tester::setTestName()
+-   Ability to bundle files with @ref corrade-cmake-add-test "corrade_add_test()"
+    CMake macro for Android and Emscripten tests
+
+@subsubsection corrade-changelog-2018-02-new-utility Utility library
+
+-   Added @ref Utility::Arguments::setFromEnvironment(), making it possible to
+    pass options via environment variables. List of all environment options is
+    also available through @ref Utility::Arguments::environment() for debugging
+    purposes, environment values are UTF-8 encoded on all platforms
+-   Scoped output redirection in @ref Utility::Debug
+-   Colored output in @ref Utility::Debug with scoping and both ANSI and
+    Windows console API support
+    (see [mosra/corrade#21](https://github.com/mosra/corrade/pull/21));
+    @ref Utility::Debug::isTty() for detecting whether colored output can be
+    used
+-   Added @ref Utility::Fatal output. Similar to @ref Utility::Error but exits
+    with defined return code right after printing the message.
+-   Added @ref Utility::Directory::isSandboxed(),
+    @ref Utility::Directory::executableLocation(), @ref Utility::Directory::tmp(),
+    @ref Utility::Directory::fromNativeSeparators() and
+    @ref Utility::Directory::toNativeSeparators()
+-   Added @ref Utility::Directory::map() and @ref Utility::mapRead() for
+    mapping files into memory, works on non-RT Windows and all Unix-like
+    systems (see [mosra/corrade#27](https://github.com/mosra/corrade/pull/27))
+-   Added @ref Utility::Resource::hasGroup()
+-   Added @ref Utility::Unicode::prevChar(), @ref Utility::Unicode::utf8()
+-   Added @ref Utility::Unicode::widen() and @ref Utility::Unicode::narrow()
+    helpers for interacting with Unicode Windows APIs
+-   Added @ref CORRADE_TARGET_IOS and @ref CORRADE_TARGET_IOS_SIMULATOR
+    macros and CMake variables
+-   Added @ref CORRADE_TARGET_X86 and @ref CORRADE_TARGET_ARM macros
+-   Added @ref CORRADE_DEPRECATED_FILE(), @ref CORRADE_DEPRECATED_ALIAS(),
+    @ref CORRADE_ALIGNAS(), @ref CORRADE_NORETURN and @ref CORRADE_CXX_STANDARD
+    macros
+
+@subsection corrade-changelog-2018-02-changes Changes and improvements
+
+-   Various updates and code modernization (see
+    [mosra/corrade#33](https://github.com/mosra/corrade/pull/33))
+
+@subsubsection corrade-changelog-2018-02-changes-containers Containers library
+
+-   @ref Containers::EnumSet now can take a @ref Containers::NoInit tag to
+    create an uninitialized value
+-   Exposed @ref Containers::EnumSet::FullValue constant
+
+@subsubsection corrade-changelog-2018-02-changes-pluginmanager PluginManager library
+
+-   @ref PluginManager::Manager now properly loads plugins from UTF-8 encoded
+    paths also on Windows
+-   @ref PluginManager::Manager can now be constructed without specifying
+    plugin directory
+
+@subsubsection corrade-changelog-2018-02-changes-testsuite TestSuite library
+
+-   @ref TestSuite::Compare::Container now prints contents of whole container
+    instead of just the first difference
+-   @ref TestSuite::Compare::File, @ref TestSuite::Compare::FileToString and
+    @ref TestSuite::Compare::StringToFile now properly handles UTF-8 encoded
+    filenames also on Windows
+-   @ref CORRADE_EXPECT_FAIL_IF() now works also on types with explicit bool
+    conversion
+
+@subsubsection corrade-changelog-2018-02-changes-utility Utility library
+
+-   @ref Utility::Arguments::parse() can now be called with zero/null
+    arguments
+-   @ref Utility::Arguments::value() now takes
+    @ref Utility::ConfigurationValueFlags for easier parsing of hexadecimal
+    and other values
+-   @ref Utility::Configuration is now able to properly load and save
+    configuration files from UTF-8 encoded filenames also on Windows
+-   Simpler implementation of @ref Utility::Debug operators, they now take the
+    class by reference instead of by value
+-   Ensuring that pointer values are printed by @ref Utility::Debug
+    consistently on all platforms
+-   Ensuring that floating-point values printed by @ref Utility::Debug have
+    enough digits of precision based on their type
+-   All @ref Utility::Directory functions now properly take and return UTF-8
+    encoded paths on Windows (see [mosra/corrade#31](https://github.com/mosra/corrade/issues/31))
+-   Implemented @ref Utility::Directory::configurationDir() and
+    @ref Utility::Directory::home() on Emscripten, OSX and iOS with proper
+    handling of sandboxed apps (see [mosra/corrade#6](https://github.com/mosra/corrade/issues/6))
+-   @ref Utility::Resource and @ref corrade-cmake-add-resource "corrade_add_resource()"
+    CMake macro now properly handle UTF-8 filenames on all platforms
+-   Removed global constructors from @ref Utility::String internals
+-   Added @ref Utility::Unicode::nextChar() overload that takes a char array
+    view instead of a @ref std::string
+
+@subsection corrade-changelog-2018-02-buildsystem Build system
+
+-   Continuous testing for Linux, OSX, Windows MSVC, Windows MinGW, Windows RT,
+    iOS, Android and Emscripten on [Travis CI](https://travis-ci.org/mosra/corrade)
+    and [AppVeyor CI](https://ci.appveyor.com/project/mosra/corrade), with code
+    coverage on [codecov.io](https://codecov.io/gh/mosra/corrade); replacing
+    the unmaintained and outdated Jenkins configuration
+-   Support for CMake subprojects. You can now clone Corrade into a
+    subdirectory in your project and add it using @cmake add_subdirectory() @ce.
+    The @cmake find_package() @ce command will then use the CMake subproject
+    instead of looking for it in system-wide locations.
+-   Reworked CMake buildsystem to use the new imported target workflow, see
+    @ref corrade-cmake for more information
+-   CMake targets are now organized in folders for better development
+    experience in IDEs such as Visual Studio or Xcode
+-   Enabling `-Wmissing-prototypes` warning on Clang when
+    `CORRADE_USE_PEDANTIC_FLAGS` property is enabled
+-   It's now possible to build only parts of the library using `WITH_*` CMake
+    options and @cmake find_package() @ce needs to request particular parts of
+    the library that are used; see @ref building-corrade and @ref corrade-cmake
+    for more information
+-   @ref corrade-cmake-add-plugin "corrade_add_plugin()" now properly installs
+    plugin *.dll to `bin/` and *.lib to `lib/` on Windows
+-   Added @ref building-corrade-packages-brew "Homebrew package" (see [mosra/corrade#22](https://github.com/mosra/corrade/issues/22))
+-   Added @ref corrade-cmake-find-dlls-for-libs "corrade_find_dlls_for_libs()"
+    CMake macro
+-   `MACOSX_RPATH` is now enabled by default on CMake 3.0+
+-   Enabling only C++ in CMake @cmake project() @ce call, if possible, to speed
+    up initial CMake run
+-   Fixed building on TDM-GCC (see [mosra/corrade#35](https://github.com/mosra/corrade/issues/35))
+-   Fixed various MSVC compilation issues (see [mosra/corrade#28](https://github.com/mosra/corrade/pull/28))
+-   Various fixes for builds without deprecated features enabled (see
+    [mosra/corrade#24](https://github.com/mosra/corrade/issues/24),
+    [mosra/corrade#32](https://github.com/mosra/corrade/pull/32))
+-   Properly passing `/std:c++14` or `/std:c++14` when `CORRADE_CXX_STANDARD`
+    is set to `14` or `17`
+
+@subsection corrade-changelog-2018-02-bugfixes Bug fixes
+
+-   @ref Containers::ArrayView::data() on non-const data now properly returns
+    non-const pointer
+-   Worked around function template merging on MSVC, which caused different
+    signals being merged into one in @ref Interconnect library
+-   Added a workaround to `interface` macro defined by `windows.h` that broke
+    @ref PluginManager headers
+-   Calling @ref CORRADE_EXPECT_FAIL() more than once in a single block caused
+    multiple definition errors
+-   Second row in @ref Utility::Arguments help output was not properly indented
+    for named arguments
+-   Prefixed @ref Utility::Arguments failed on encountering value starting with
+    `-`
+-   @ref Utility::Directory::mkpath() now properly returns @cpp false @ce if
+    path creation fails
+-   Fixed @ref Utility::Directory::rm() for directories on Emscripten
+-   Fixed unaligned reads and iterative digesting in @ref Utility::Sha1
+-   Properly re-running CMake and updating dependencies when resource
+    configuration file added by @ref corrade-cmake-add-resource "corrade_add_resource()"
+    changes
+-   Fixed @ref Containers::LinkedList::move() called on an item itself
+
+@subsection corrade-changelog-2018-02-deprecated Deprecated APIs
+
+-   @cpp Containers::ArrayReference @ce is deprecated, use the shorter
+    @ref Containers::ArrayView name instead
+-   @cpp Containers::Array::zeroInitialized() @ce is deprecated, use
+    @ref Containers::Array::Array(ValueInitT, std::size_t) instead
+-   @cpp Containers::Array::from() @ce is deprecated, use
+    @ref Containers::Array::Array(InPlaceInitT, std::initializer_list<T>)
+    instead
+-   @cpp Utility::Arguments::setHelpKey() @ce is deprecated as its
+    functionality was merged into @ref Utility::Arguments::setHelp()
+-   @cpp Utility::Debug::setOutput() @ce is deprecated and superseded by scoped
+    output, see @ref Utility::Debug class documentation for more information
+-   @cpp Utility::Debug::noNewlineAtTheEnd() @ce is deprecated, use
+    @ref Utility::Debug::Flag::NoNewlineAtTheEnd instead
+-   @cpp Utility::sleep() @ce is deprecated, use @ref Utility::System::sleep()
+    instead
+-   `CORRADE_*_LIBRARIES`, `CORRADE_*_INCLUDE_DIRS` and `CORRADE_RC_EXECUTABLE`
+    CMake variables are deprecated in favor of `Corrade::*` imported targets,
+    `CORRADE_CXX_FLAGS` is deprecated in favor of `CORRADE_CXX_STANDARD` and
+    `CORRADE_USE_PEDANTIC_FLAGS` properties. See @ref corrade-cmake for more
+    information.
+
+@subsection corrade-changelog-2018-02-compatibility Potential compatibility breakages, removed APIs
+
+-   @ref PluginManager::AbstractPlugin now takes plugin name via `const&`
+    instead of by-value
+-   Reversed parameter order of @ref CORRADE_EXPECT_FAIL_IF() to be more
+    intuitive
+-   The `Utility::Debug::setFlags()` function was removed, use
+    @ref Utility::Debug::nospace and @ref Utility::Debug::Flag::NoNewlineAtTheEnd
+    instead
+-   The @ref Utility::Directory, @ref Utility::String and @ref Utility::Unicode
+    classes are now a namespace (might break `using` declarations, but
+    otherwise it's fully source-compatible)
+-   @ref corrade-cmake-add-test "corrade_add_test()" CMake macro now calls
+    @cmake target_link_libraries() @ce with explicit `PRIVATE` keyword, meaning
+    the users also have to specify `PUBLIC`/`PRIVATE`/`INTERFACE` when calling
+    @cmake target_link_libraries() @ce on a test
+-   All path handling functions in @ref Utility::Directory consistently return
+    and expect only forward slashes as directory separators
+
+@subsection corrade-changelog-2018-02-documentation Documentation
+
+-   New documentation theme powered by [m.css](http://mcss.mosra.cz) and
+    related massive updates of *everything*
+-   Various updates and clarifications to the @ref corrade-coding-style page
+-   All example code is put into public domain (or UNLICENSE) to free you from
+    any legal obstacles when reusing the code in your apps.
+-   The @ref building-corrade documentation now prefers package installation
+    instead of manual build
+-   Documented how to use Vcpkg packages
+-   Various other updates (see [mosra/corrade#26](https://github.com/mosra/corrade/pull/26),
+    [mosra/corrade#30](https://github.com/mosra/corrade/pull/30))
+
+Changelogs for previous versions are available in @ref corrade-changelog-old.
+
+*/
+
+}

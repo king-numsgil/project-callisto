@@ -1,0 +1,12 @@
+/build*
+/debian
+/obj-*
+pkg
+*.kdev4
+*~
+*.kate-swp
+*.pkg.tar.xz
+CMakeLists.txt.user*
+.DS_Store
+*.swp
+*~
