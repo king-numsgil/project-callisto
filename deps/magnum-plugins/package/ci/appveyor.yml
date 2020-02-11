@@ -1,0 +1,60 @@
+clone_depth: 1
+
+environment:
+  matrix:
+  - TARGET: desktop
+    COMPILER: msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    APPVEYOR_JOB_NAME: windows-msvc2015
+  - TARGET: desktop
+    COMPILER: msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_JOB_NAME: windows-msvc2017
+  - TARGET: desktop
+    COMPILER: msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    APPVEYOR_JOB_NAME: windows-msvc2019
+  - TARGET: desktop
+    COMPILER: mingw
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_JOB_NAME: windows-mingw
+  - TARGET: rt
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    APPVEYOR_JOB_NAME: windows-rt-msvc2017
+
+notifications:
+- provider: Webhook
+  url: https://webhooks.gitter.im/e/415ae90928ba0dbd3df4
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
+
+install:
+- cinst ninja
+- set PATH=C:/Sys/bin;C:/tools/ninja;%PATH%
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" pip install codecov
+
+# OpenAL
+- IF NOT "%TARGET%" == "rt" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\openal-soft-1.19.1-bin.zip appveyor DownloadFile https://openal-soft.org/openal-binaries/openal-soft-1.19.1-bin.zip
+- IF NOT "%TARGET%" == "rt" 7z x openal-soft-1.19.1-bin.zip && ren openal-soft-1.19.1-bin openal && echo [General] > %APPDATA%/alsoft.ini & echo drivers=null >> %APPDATA%/alsoft.ini
+- IF "%TARGET%" == "desktop" ren openal\bin\Win64\soft_oal.dll OpenAL32.dll
+
+# DevIL
+- IF NOT "%TARGET%" == "rt" IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\DevIL-SDK-x64-1.7.8.zip appveyor DownloadFile http://downloads.sourceforge.net/openil/DevIL-SDK-x64-1.7.8.zip
+- IF NOT "%TARGET%" == "rt" mkdir devil && cd devil && 7z x ..\DevIL-SDK-x64-1.7.8.zip && mkdir lib && move *.lib lib\ && cd ..
+
+# Basis Universal
+- set BASIS_VERSION=1cae1d57266e2c95bc011b0bf1ccb9940988c184
+- IF NOT EXIST %APPVEYOR_BUILD_FOLDER%\basis_universal-%BASIS_VERSION%.zip appveyor DownloadFile https://github.com/BinomialLLC/basis_universal/archive/%BASIS_VERSION%.zip
+- 7z x %BASIS_VERSION%.zip && ren basis_universal-%BASIS_VERSION% basis_universal
+
+build_script:
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "msvc" call package\ci\appveyor-desktop.bat
+- IF "%TARGET%" == "desktop" IF "%COMPILER%" == "mingw" call package\ci\appveyor-desktop-mingw.bat
+- IF "%TARGET%" == "rt" call package\ci\appveyor-rt.bat
+
+cache:
+- openal-soft-1.19.1-bin.zip -> package/ci/appveyor-cache-reset.txt
+- libjpeg-turbo-1.5.0.tar.gz -> package/ci/appveyor-cache-reset.txt
+- DevIL-SDK-x64-1.7.8.zip -> package/ci/appveyor-cache-reset.txt
+- basis_universal-%BASIS_VERSION%.zip -> package/ci/appveyor-cache-reset.txt
