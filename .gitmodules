@@ -1,0 +1,6 @@
+[submodule "deps/corrade/toolchains"]
+	url = https://github.com/mosra/toolchains.git
+[submodule "deps/magnum-plugins/toolchains"]
+	url = https://github.com/mosra/toolchains.git
+[submodule "deps/magnum/toolchains"]
+	url = https://github.com/mosra/toolchains.git
