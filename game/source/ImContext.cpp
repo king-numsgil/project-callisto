@@ -286,7 +286,8 @@ namespace umbriel
 		_timeline.nextFrame();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.DeltaTime = _timeline.previousFrameDuration();
+		auto const prevDuration = _timeline.previousFrameDuration();
+		io.DeltaTime = prevDuration > 0 ? prevDuration : 1.f / 60.f;
 
 		/* Fire delayed mouse events. This sets MouseDown both in case the press
 		   happened in this frame but also if both press and release happened at
