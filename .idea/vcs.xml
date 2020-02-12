@@ -3,5 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/cmake-build-debug/_deps/glfw-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/corrade/toolchains" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/magnum-plugins/toolchains" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/magnum/toolchains" vcs="Git" />
   </component>
 </project>
