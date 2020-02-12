@@ -26,6 +26,33 @@ public:
 private:
 	ImContext _imgui;
 
+	void drawEvent() override
+	{
+		GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
+		_imgui.newFrame();
+		if (ImGui::GetIO().WantTextInput && !isTextInputActive())
+			startTextInput();
+		else if (!ImGui::GetIO().WantTextInput && isTextInputActive())
+			stopTextInput();
+
+		ImGui::ShowDemoWindow(nullptr);
+
+		GL::Renderer::enable(GL::Renderer::Feature::Blending);
+		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
+		GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
+
+		_imgui.drawFrame();
+
+		GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
+		GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
+		GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
+		GL::Renderer::disable(GL::Renderer::Feature::Blending);
+
+		swapBuffers();
+		redraw();
+	}
+
 	void keyReleaseEvent(KeyEvent& event) override
 	{
 		if (_imgui.handleKeyReleaseEvent(event)) return;
@@ -66,33 +93,6 @@ private:
 	void textInputEvent(TextInputEvent& event) override
 	{
 		if (_imgui.handleTextInputEvent(event)) return;
-	}
-
-	void drawEvent() override
-	{
-		GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
-		_imgui.newFrame();
-		if (ImGui::GetIO().WantTextInput && !isTextInputActive())
-			startTextInput();
-		else if (!ImGui::GetIO().WantTextInput && isTextInputActive())
-			stopTextInput();
-
-		ImGui::ShowDemoWindow(nullptr);
-
-		GL::Renderer::enable(GL::Renderer::Feature::Blending);
-		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
-		GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
-		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
-
-		_imgui.drawFrame();
-
-		GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
-		GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-		GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
-		GL::Renderer::disable(GL::Renderer::Feature::Blending);
-
-		swapBuffers();
-		redraw();
 	}
 };
 
