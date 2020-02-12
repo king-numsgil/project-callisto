@@ -93,6 +93,7 @@ namespace umbriel
 				io.KeysDown[ImGuiKey_PageDown] = value;
 				break;
 			case KeyEvent::Key::Enter:
+			case KeyEvent::Key::NumEnter:
 				io.KeysDown[ImGuiKey_Enter] = value;
 				break;
 			case KeyEvent::Key::Esc:
