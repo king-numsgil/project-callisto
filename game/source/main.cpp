@@ -56,7 +56,11 @@ private:
 
 	void mouseScrollEvent(MouseScrollEvent& event) override
 	{
-		if (_imgui.handleMouseScrollEvent(event)) return;
+		if (_imgui.handleMouseScrollEvent(event))
+		{
+			event.setAccepted();
+			return;
+		}
 	}
 
 	void textInputEvent(TextInputEvent& event) override
