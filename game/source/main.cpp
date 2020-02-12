@@ -92,6 +92,7 @@ private:
 		GL::Renderer::disable(GL::Renderer::Feature::Blending);
 
 		swapBuffers();
+		redraw();
 	}
 };
 
