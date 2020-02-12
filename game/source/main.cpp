@@ -1,5 +1,6 @@
 #include <Magnum/Platform/GlfwApplication.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/DebugOutput.h>
 #include <Magnum/GL/Renderer.h>
 
 #include <umbriel/ImContext.hpp>
@@ -19,8 +20,19 @@ public:
 				       .setSize({1280, 768}),
 		       GLConfiguration{}
 				       .setSrgbCapable(true)
-				       .setSampleCount(2));
+				       .setSampleCount(2)
+		#ifndef NDEBUG
+				       .addFlags(GLConfiguration::Flag::Debug)
+		#endif
+		);
 		_imgui = ImContext{windowSize()};
+
+		#ifndef NDEBUG
+		GL::Renderer::enable(GL::Renderer::Feature::DebugOutput);
+		GL::Renderer::enable(GL::Renderer::Feature::DebugOutputSynchronous);
+		GL::DebugOutput::setDefaultCallback();
+		GL::DebugOutput::setEnabled(GL::DebugOutput::Source::Api, GL::DebugOutput::Type::Other, {131185}, false);
+		#endif
 
 		GL::Renderer::setClearColor(0xa5c9ea_rgbf);
 		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
