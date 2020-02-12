@@ -1,7 +1,7 @@
 #include <Magnum/Platform/GlfwApplication.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
-#include <Magnum/Math/Color.h>
+#include <umbriel/Types.hpp>
 
 using namespace Magnum;
 
@@ -13,7 +13,6 @@ public:
 			.setTitle("Umbriel Rendering Window")
 			.setSize({1280, 768})}
 	{
-		using namespace Math::Literals;
 		GL::Renderer::setClearColor(0xa5c9ea_rgbf);
 	}
 

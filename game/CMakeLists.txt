@@ -1,6 +1,10 @@
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
-add_executable(UmbrielGame source/main.cpp)
+add_executable(UmbrielGame
+		include/umbriel/Types.hpp
+		include/umbriel/Log.hpp
+		source/main.cpp
+)
 
 set_target_properties(UmbrielGame
 	PROPERTIES ${DEFAULT_PROJECT_OPTIONS}
@@ -8,7 +12,8 @@ set_target_properties(UmbrielGame
 
 target_include_directories(UmbrielGame
 	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}/include
+		${CMAKE_CURRENT_BINARY_DIR}/include
 	PUBLIC
 		${DEFAULT_INCLUDE_DIRECTORIES}
 )
