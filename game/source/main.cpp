@@ -12,11 +12,16 @@ class UmbrielApp : public Platform::Application
 {
 public:
 	explicit UmbrielApp(const Arguments& arguments)
-			: Platform::Application{arguments, Configuration{}
-			.setTitle("Umbriel Rendering Window")
-			.setSize({1280, 768})},
-			  _imgui{windowSize()}
+			: Platform::Application{arguments, NoCreate}
 	{
+		create(Configuration{}
+				       .setTitle("Umbriel Rendering Window")
+				       .setSize({1280, 768}),
+		       GLConfiguration{}
+				       .setSrgbCapable(true)
+				       .setSampleCount(2));
+		_imgui = ImContext{windowSize()};
+
 		GL::Renderer::setClearColor(0xa5c9ea_rgbf);
 		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
 		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
@@ -24,7 +29,7 @@ public:
 	}
 
 private:
-	ImContext _imgui;
+	ImContext _imgui{NoCreate};
 
 	void drawEvent() override
 	{
