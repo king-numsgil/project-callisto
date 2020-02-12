@@ -27,7 +27,7 @@ target_include_directories(UmbrielGame
 
 target_link_libraries(UmbrielGame
 	PRIVATE
-		Json ImGUI
+		Json ImGUI box2d
 
 		Corrade::Containers
 		Corrade::Utility

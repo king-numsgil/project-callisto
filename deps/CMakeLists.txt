@@ -11,6 +11,16 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
+	NAME Box2D
+	GITHUB_REPOSITORY erincatto/box2d
+	GIT_TAG master
+	OPTIONS
+		"BOX2D_BUILD_TESTS Off"
+		"BOX2D_BUILD_SAMPLES Off"
+		"BOX2D_BUILD_DOCS Off"
+)
+
+CPMAddPackage(
 	NAME Json
 	VERSION 3.7.3
 	URL https://github.com/nlohmann/json/releases/download/v3.7.3/include.zip
