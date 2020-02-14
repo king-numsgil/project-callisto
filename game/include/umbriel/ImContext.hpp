@@ -535,12 +535,12 @@ namespace Magnum::Math::Implementation
 	template<>
 	struct VectorConverter<2, Float, ImVec2>
 	{
-		static Vector<2, Float> from(const ImVec2& other)
+		static inline Vector<2, Float> from(ImVec2 const& other)
 		{
 			return {other.x, other.y};
 		}
 
-		static ImVec2 to(const Vector<2, Float>& other)
+		static inline ImVec2 to(Vector<2, Float> const& other)
 		{
 			return {other[0], other[1]};
 		}
@@ -550,12 +550,12 @@ namespace Magnum::Math::Implementation
 	template<>
 	struct VectorConverter<4, Float, ImVec4>
 	{
-		static Vector<4, Float> from(const ImVec4& other)
+		static inline Vector<4, Float> from(ImVec4 const& other)
 		{
 			return {other.x, other.y, other.z, other.w};
 		}
 
-		static ImVec4 to(const Vector<4, Float>& other)
+		static inline ImVec4 to(Vector<4, Float> const& other)
 		{
 			return {other[0], other[1], other[2], other[3]};
 		}
@@ -565,12 +565,12 @@ namespace Magnum::Math::Implementation
 	template<>
 	struct VectorConverter<4, Float, ImColor>
 	{
-		static Vector<4, Float> from(const ImColor& other)
+		static inline Vector<4, Float> from(ImColor const& other)
 		{
 			return Vector<4, Float>(other.Value);
 		}
 
-		static ImColor to(const Vector<4, Float>& other)
+		static inline ImColor to(Vector<4, Float> const& other)
 		{
 			return ImVec4(other); /* Construct from ImVec4 */
 		}
@@ -584,12 +584,12 @@ namespace Magnum::Math::Implementation
 	template<>
 	struct VectorConverter<3, Float, ImColor>
 	{
-		static Vector<3, Float> from(const ImColor& other)
+		static inline Vector<3, Float> from(ImColor const& other)
 		{
 			return Vector<3, Float>(other.Value.x, other.Value.y, other.Value.z);
 		}
 
-		static ImColor to(const Vector<3, Float>& other)
+		static inline ImColor to(Vector<3, Float> const& other)
 		{
 			return ImVec4(Vector<4, Float>{other[0], other[1], other[2], 1.0f});
 		}

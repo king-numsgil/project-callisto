@@ -13,7 +13,11 @@ using std::string_view;
 using std::literals::operator ""sv;
 using std::array;
 
-template<class... Ts> struct overload : Ts ... { using Ts::operator()...; };
+template<class... Ts>
+struct overload : Ts ...
+{
+	using Ts::operator()...;
+};
 template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
 #include <Magnum/Math/Math.h>
@@ -163,3 +167,68 @@ using f64deg = Magnum::Math::Deg<f64>;
 using Magnum::Math::Literals::operator ""_deg;
 using f64rad = Magnum::Math::Rad<f64>;
 using Magnum::Math::Literals::operator ""_rad;
+
+#include <box2d/b2_math.h>
+
+namespace Magnum::Math::Implementation
+{
+	template<>
+	struct VectorConverter<2, Float, b2Vec2>
+	{
+		static inline Vector<2, Float> from(b2Vec2 const& other)
+		{
+			return {other.x, other.y};
+		}
+
+		static inline b2Vec2 to(Vector<2, Float> const& other)
+		{
+			return {other[0], other[1]};
+		}
+	};
+
+	template<>
+	struct VectorConverter<3, Float, b2Vec3>
+	{
+		static inline Vector<3, Float> from(b2Vec3 const& other)
+		{
+			return {other.x, other.y, other.z};
+		}
+
+		static inline b2Vec3 to(Vector<3, Float> const& other)
+		{
+			return {other[0], other[1], other[2]};
+		}
+	};
+
+	template<>
+	struct ComplexConverter<Float, b2Rot>
+	{
+		static inline Complex<Float> from(b2Rot const& other)
+		{
+			return {other.c, other.s};
+		}
+
+		static inline b2Rot to(Complex<Float> const& other)
+		{
+			b2Rot ret{};
+			ret.c = other.real();
+			ret.s = other.imaginary();
+			return ret;
+		}
+	};
+
+	template<>
+	struct DualComplexConverter<Float, b2Transform>
+	{
+		static inline DualComplex<Float> from(b2Transform const& other)
+		{
+			return DualComplex<Float>::translation(Vector2<Float>(other.p)) *
+			       DualComplex<Float>::rotation(Rad<Float>{other.q.GetAngle()});
+		}
+
+		static inline b2Transform to(DualComplex<Float> const& other)
+		{
+			return {(b2Vec2)other.translation(), (b2Rot)other.rotation()};
+		}
+	};
+}
