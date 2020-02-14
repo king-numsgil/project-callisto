@@ -32,6 +32,12 @@ if(Json_ADDED)
 	target_include_directories(Json INTERFACE ${Json_SOURCE_DIR})
 endif()
 
+CPMAddPackage(
+	NAME EnTT
+	VERSION 3.2.2
+	GITHUB_REPOSITORY skypjack/entt
+)
+
 set(BUILD_DEPRECATED OFF CACHE BOOL "" FORCE)
 set(WITH_GL ON CACHE BOOL "" FORCE)
 set(WITH_AUDIO ON CACHE BOOL "" FORCE)
