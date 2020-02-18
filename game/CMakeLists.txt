@@ -8,7 +8,6 @@ add_executable(UmbrielGame
 		source/main.cpp
 
 		include/umbriel/ImContext.hpp
-		include/umbriel/ImContext.inl
 		source/ImContext.cpp
 		${UMBRIEL_IMGUI_RCS}
 )
