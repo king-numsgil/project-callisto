@@ -1,6 +1,7 @@
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 corrade_add_resource(UMBRIEL_IMGUI_RCS resource/imgui/resource.conf)
+corrade_add_resource(UMBRIEL_SPRITES_RCS resource/sprites/resource.conf)
 
 add_executable(UmbrielGame
 		include/umbriel/Types.hpp
@@ -10,6 +11,7 @@ add_executable(UmbrielGame
 		include/umbriel/ImContext.hpp
 		source/ImContext.cpp
 		${UMBRIEL_IMGUI_RCS}
+		${UMBRIEL_SPRITES_RCS}
 )
 
 set_target_properties(UmbrielGame
