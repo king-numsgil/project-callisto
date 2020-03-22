@@ -4,8 +4,10 @@ corrade_add_resource(UMBRIEL_IMGUI_RCS resource/imgui/resource.conf)
 corrade_add_resource(UMBRIEL_SPRITES_RCS resource/sprites/resource.conf)
 
 add_executable(UmbrielGame
+		include/umbriel/State.hpp
 		include/umbriel/Types.hpp
 		include/umbriel/Log.hpp
+		source/State.cpp
 		source/main.cpp
 
 		include/umbriel/ImContext.hpp

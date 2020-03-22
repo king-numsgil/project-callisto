@@ -2,8 +2,10 @@
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/DebugOutput.h>
 #include <Magnum/GL/Renderer.h>
+#include <Magnum/Timeline.h>
 
 #include <umbriel/ImContext.hpp>
+#include <umbriel/State.hpp>
 #include <umbriel/Types.hpp>
 
 using namespace umbriel;
@@ -21,7 +23,7 @@ public:
 		       GLConfiguration{}
 				       .setSrgbCapable(true)
 				       .setSampleCount(2)
-		#ifndef NDEBUG
+				       #ifndef NDEBUG
 				       .addFlags(GLConfiguration::Flag::Debug)
 		#endif
 		);
@@ -38,9 +40,13 @@ public:
 		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
 		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
 		                               GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+
+		_time.start();
 	}
 
 private:
+	StateManager _manager{};
+	Timeline _time{};
 	ImContext _imgui{NoCreate};
 
 	void drawEvent() override
@@ -51,6 +57,8 @@ private:
 			startTextInput();
 		else if (!ImGui::GetIO().WantTextInput && isTextInputActive())
 			stopTextInput();
+
+		_manager.draw_event(_time.previousFrameDuration());
 
 		ImGui::ShowDemoWindow(nullptr);
 
@@ -68,11 +76,13 @@ private:
 
 		swapBuffers();
 		redraw();
+		_time.nextFrame();
 	}
 
 	void keyReleaseEvent(KeyEvent& event) override
 	{
 		if (_imgui.handleKeyReleaseEvent(event)) return;
+		_manager.key_release_event(event);
 	}
 
 	void keyPressEvent(KeyEvent& event) override
@@ -80,22 +90,30 @@ private:
 		if (_imgui.handleKeyPressEvent(event)) return;
 
 		if (event.key() == KeyEvent::Key::Esc)
+		{
 			exit();
+			return;
+		}
+
+		_manager.key_press_event(event);
 	}
 
 	void mouseReleaseEvent(MouseEvent& event) override
 	{
 		if (_imgui.handleMouseReleaseEvent(event)) return;
+		_manager.mouse_release_event(event);
 	}
 
 	void mousePressEvent(MouseEvent& event) override
 	{
 		if (_imgui.handleMousePressEvent(event)) return;
+		_manager.mouse_press_event(event);
 	}
 
 	void mouseMoveEvent(MouseMoveEvent& event) override
 	{
 		if (_imgui.handleMouseMoveEvent(event)) return;
+		_manager.mouse_move_event(event);
 	}
 
 	void mouseScrollEvent(MouseScrollEvent& event) override
@@ -105,11 +123,14 @@ private:
 			event.setAccepted();
 			return;
 		}
+
+		_manager.mouse_scroll_event(event);
 	}
 
 	void textInputEvent(TextInputEvent& event) override
 	{
 		if (_imgui.handleTextInputEvent(event)) return;
+		_manager.text_input_event(event);
 	}
 };
 
