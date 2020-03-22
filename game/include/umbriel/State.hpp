@@ -53,6 +53,12 @@ namespace umbriel
 
 		virtual void draw_event(f32 delta) = 0;
 
+		virtual void pause_event()
+		{}
+
+		virtual void resume_event()
+		{}
+
 		virtual void key_press_event(KeyEvent&)
 		{}
 

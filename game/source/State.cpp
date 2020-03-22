@@ -4,6 +4,9 @@ namespace umbriel
 {
 	void StateManager::push_state(State* s)
 	{
+		if (State* prev = current_state(); prev)
+			prev->pause_event();
+
 		insert(s, current_state());
 	}
 
@@ -12,6 +15,10 @@ namespace umbriel
 		if (State* ret = current_state(); ret)
 		{
 			cut(ret);
+
+			if (State* s = current_state(); s)
+				s->resume_event();
+
 			return ret;
 		}
 
