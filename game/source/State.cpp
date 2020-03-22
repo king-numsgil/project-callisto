@@ -2,6 +2,22 @@
 
 namespace umbriel
 {
+	void StateManager::push_state(State* s)
+	{
+		insert(s, current_state());
+	}
+
+	State* StateManager::pop_state()
+	{
+		if (State* ret = current_state(); ret)
+		{
+			cut(ret);
+			return ret;
+		}
+
+		return nullptr;
+	}
+
 	void StateManager::draw_event(f32 delta)
 	{
 		for (State* s = first(); s; s = s->next_state())

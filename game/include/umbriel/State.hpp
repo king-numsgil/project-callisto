@@ -48,6 +48,9 @@ namespace umbriel
 		inline State* previous_state()
 		{ return previous(); }
 
+		inline void erase()
+		{ Corrade::Containers::LinkedListItem<State, StateManager>::erase(); }
+
 		virtual void draw_event(f32 delta) = 0;
 
 		virtual void key_press_event(KeyEvent&)
@@ -117,6 +120,10 @@ namespace umbriel
 
 		State* current_state()
 		{ return first(); }
+
+		void push_state(State* s);
+
+		State* pop_state();
 
 		void draw_event(f32 delta);
 
