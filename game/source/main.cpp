@@ -5,7 +5,7 @@
 #include <Magnum/Timeline.h>
 
 #include <umbriel/ImContext.hpp>
-#include <umbriel/State.hpp>
+#include <umbriel/GameState.hpp>
 #include <umbriel/Types.hpp>
 
 using namespace umbriel;
@@ -41,6 +41,7 @@ public:
 		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
 		                               GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
+		_manager.push_state(new GameState(_manager.weak_ptr()));
 		_time.start();
 	}
 
