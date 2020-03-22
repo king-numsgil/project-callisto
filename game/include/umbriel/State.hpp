@@ -33,12 +33,20 @@ namespace umbriel
 		{ return _manager.lock(); }
 
 		[[nodiscard]]
-		State const* next_state() const
+		inline State const* next_state() const
 		{ return next(); }
 
 		[[nodiscard]]
-		State* next_state()
+		inline State* next_state()
 		{ return next(); }
+
+		[[nodiscard]]
+		inline State const* previous_state() const
+		{ return previous(); }
+
+		[[nodiscard]]
+		inline State* previous_state()
+		{ return previous(); }
 
 		virtual void draw_event(f32 delta) = 0;
 
