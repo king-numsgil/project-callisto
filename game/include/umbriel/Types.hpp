@@ -80,6 +80,10 @@ using f64vec4 = vec4<f64>;
 
 #include <Magnum/Math/Matrix.h>
 
+using Magnum::Math::NoInit;
+using Magnum::Math::ZeroInit;
+using Magnum::Math::IdentityInit;
+
 template<class T> using mat3 = Magnum::Math::Matrix3<T>;
 template<class T> using mat4 = Magnum::Math::Matrix4<T>;
 
