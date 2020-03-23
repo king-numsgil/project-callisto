@@ -1,6 +1,7 @@
 #include <Magnum/MeshTools/CompressIndices.h>
 #include <Magnum/Trade/AbstractImporter.h>
 #include <Magnum/MeshTools/Interleave.h>
+#include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Square.h>
 #include <Corrade/Utility/Resource.h>
 #include <Magnum/Trade/MeshData2D.h>
@@ -38,6 +39,7 @@ namespace umbriel
 				.setSubImage(0, {}, *image);
 
 		Trade::MeshData2D quad = Primitives::squareSolid(Primitives::SquareTextureCoords::Generate);
+		MeshTools::transformVectorsInPlace(f32mat3::scaling({30.f, 30.f}), quad.positions(0));
 		GL::Buffer sprite_data{};
 		sprite_data.setData(MeshTools::interleave(quad.positions(0), quad.textureCoords2D(0)));
 		_sprite.setPrimitive(quad.primitive())
@@ -56,7 +58,7 @@ namespace umbriel
 		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 		_flat.bindTexture(_player)
-				.setTransformationProjectionMatrix(_proj * _view * f32mat3::scaling({30.f, 30.f}));
+				.setTransformationProjectionMatrix(_proj * _view);
 		_sprite.draw(_flat);
 	}
 }
