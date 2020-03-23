@@ -61,8 +61,6 @@ private:
 
 		_manager.draw_event(_time.previousFrameDuration());
 
-		ImGui::ShowDemoWindow(nullptr);
-
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
