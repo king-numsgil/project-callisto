@@ -38,7 +38,7 @@ target_link_libraries(UmbrielGame
 		Corrade::Utility
 		Corrade::Main
 
-		MagnumPlugins::PngImporter
+		MagnumPlugins::StbImageImporter
 
 		Magnum::Magnum
 		Magnum::GlfwApplication

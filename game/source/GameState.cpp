@@ -23,7 +23,7 @@ namespace umbriel
 			: State(manager), _flat{Shaders::Flat2D::Flag::Textured}, _player{}, _sprite{}
 	{
 		PluginManager::Manager<Trade::AbstractImporter> plugins;
-		auto importer = plugins.loadAndInstantiate("PngImporter");
+		auto importer = plugins.loadAndInstantiate("StbImageImporter");
 		if (!importer) Fatal{} << "Cannot load PngImporter plugin";
 
 		Utility::Resource const rs{"UmbrielSprites"};
