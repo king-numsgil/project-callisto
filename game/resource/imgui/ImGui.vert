@@ -57,7 +57,7 @@ out mediump vec2 interpolatedTextureCoords;
 out mediump vec4 interpolatedColor;
 
 void main() {
-    interpolatedTextureCoords = textureCoords;
-    interpolatedColor = color;
-    gl_Position = projectionMatrix*vec4(position.xy, 0, 1);
+	interpolatedTextureCoords = textureCoords;
+	interpolatedColor = color;
+	gl_Position = projectionMatrix*vec4(position.xy, 0, 1);
 }

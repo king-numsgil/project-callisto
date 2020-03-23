@@ -232,7 +232,7 @@ namespace Magnum::Math::Implementation
 
 		static inline b2Transform to(DualComplex<Float> const& other)
 		{
-			return {(b2Vec2)other.translation(), (b2Rot)other.rotation()};
+			return {(b2Vec2) other.translation(), (b2Rot) other.rotation()};
 		}
 	};
 }

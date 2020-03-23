@@ -37,5 +37,5 @@ in mediump vec4 interpolatedColor;
 out lowp vec4 color;
 
 void main() {
-    color = interpolatedColor*texture(colorTexture, interpolatedTextureCoords.st);
+	color = interpolatedColor*texture(colorTexture, interpolatedTextureCoords.st);
 }
