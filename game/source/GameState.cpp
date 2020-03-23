@@ -24,7 +24,7 @@ namespace umbriel
 	{
 		PluginManager::Manager<Trade::AbstractImporter> plugins;
 		auto importer = plugins.loadAndInstantiate("StbImageImporter");
-		if (!importer) Fatal{} << "Cannot load PngImporter plugin";
+		if (!importer) Fatal{} << "Cannot load StbImageImporter plugin";
 
 		Utility::Resource const rs{"UmbrielSprites"};
 		if (!importer->openData(rs.getRaw("player_b.png")))
