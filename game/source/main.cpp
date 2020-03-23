@@ -41,7 +41,7 @@ public:
 		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
 		                               GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
-		_manager.push_state(new GameState(_manager.weak_ptr()));
+		_manager.push_state<GameState>();
 		_time.start();
 	}
 

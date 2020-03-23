@@ -3,6 +3,7 @@
 #include <Magnum/Platform/GlfwApplication.h>
 #include <Corrade/Containers/LinkedList.h>
 #include <umbriel/Types.hpp>
+#include <type_traits>
 #include <utility>
 #include <memory>
 
@@ -128,6 +129,13 @@ namespace umbriel
 		{ return first(); }
 
 		void push_state(State* s);
+
+		template<class StateT, typename... Args>
+		inline void push_state(Args&& ... args)
+		{
+			static_assert(std::is_constructible<StateT, Args..., std::weak_ptr<StateManager const>>::value, "State constructor is invalid");
+			push_state(new StateT(std::forward(args)..., weak_ptr()));
+		}
 
 		State* pop_state();
 
