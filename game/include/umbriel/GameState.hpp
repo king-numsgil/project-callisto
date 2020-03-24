@@ -14,7 +14,6 @@ namespace umbriel
 	{
 		Magnum::Shaders::Flat2D _flat;
 		physics::Space _space{};
-		//b2World _world{{0.f, 0.f}};
 		entt::registry _registry{};
 		entt::entity _player{};
 
@@ -28,8 +27,8 @@ namespace umbriel
 
 		void draw_event(f32 delta) override;
 
-		virtual void key_press_event(KeyEvent& event) override;
+		void key_press_event(KeyEvent& event) override;
 
-		virtual void key_release_event(KeyEvent& event) override;
+		void key_release_event(KeyEvent& event) override;
 	};
 }
