@@ -5,8 +5,12 @@ corrade_add_resource(UMBRIEL_SPRITES_RCS resource/sprites/resource.conf)
 
 add_executable(UmbrielGame
 		include/umbriel/physics/ChipmunkHandle.hpp
+		include/umbriel/physics/Shape.hpp
 		include/umbriel/physics/Space.hpp
+		include/umbriel/physics/Body.hpp
+		source/physics/Shape.cpp
 		source/physics/Space.cpp
+		source/physics/Body.cpp
 
 		include/umbriel/Components.hpp
 		include/umbriel/GameState.hpp
