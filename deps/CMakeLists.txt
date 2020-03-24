@@ -11,19 +11,6 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
-	NAME Chipmunk2D
-	GITHUB_REPOSITORY slembcke/Chipmunk2D
-	VERSION 7.0.3
-	GIT_TAG Chipmunk-7.0.3
-	OPTIONS
-		"CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}"
-		"BUILD_DEMOS Off"
-		"INSTALL_DEMOS Off"
-		"BUILD_SHARED Off"
-		"BUILD_STATIC On"
-)
-
-CPMAddPackage(
 	NAME Json
 	VERSION 3.7.3
 	URL https://github.com/nlohmann/json/releases/download/v3.7.3/include.zip
@@ -56,6 +43,7 @@ set(WITH_STBTRUETYPEFONT ON CACHE BOOL "" FORCE)
 set(WITH_DRFLACAUDIOIMPORTER ON CACHE BOOL "" FORCE)
 set(WITH_TINYGLTFIMPORTER ON CACHE BOOL "" FORCE)
 
+add_subdirectory(chipmunk EXCLUDE_FROM_ALL)
 add_subdirectory(ImGUI EXCLUDE_FROM_ALL)
 add_subdirectory(corrade EXCLUDE_FROM_ALL)
 add_subdirectory(magnum EXCLUDE_FROM_ALL)
