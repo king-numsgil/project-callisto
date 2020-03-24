@@ -14,6 +14,8 @@ namespace umbriel::physics
 	class Body : public ChipmunkHandle<cpBody>
 	{
 	public:
+		Body();
+
 		Body(Space& space, f64 mass, f64 moment);
 
 		~Body() override = default;

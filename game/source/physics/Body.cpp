@@ -2,6 +2,9 @@
 
 namespace umbriel::physics
 {
+	Body::Body() : ChipmunkHandle<cpBody>{nullptr, cpBodyFree}
+	{}
+
 	Body::Body(Space& space, f64 mass, f64 moment)
 			: ChipmunkHandle<cpBody>{cpSpaceAddBody(space.handle(), cpBodyNew(mass, moment)), cpBodyFree}
 	{}
