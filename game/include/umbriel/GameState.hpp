@@ -1,26 +1,26 @@
 #pragma once
 
-#include <Magnum/Shaders/Flat.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Mesh.h>
 #include <entt/entt.hpp>
 
 #include <umbriel/physics/Space.hpp>
+#include <umbriel/FlatShader.hpp>
 #include <umbriel/State.hpp>
 
 namespace umbriel
 {
 	class GameState : public State
 	{
-		Magnum::Shaders::Flat2D _flat;
+		FlatShader _flat;
 		physics::Space _space{};
 		entt::registry _registry{};
 		entt::entity _player{};
 
-		f32mat3 _proj{IdentityInit};
-		f32dcomp _view{IdentityInit};
+		f64mat3 _proj{IdentityInit};
+		f64dcomp _view{IdentityInit};
 
-		f32 _accel{0.f};
+		f64 _accel{0.f};
 
 	public:
 		explicit GameState(const std::weak_ptr<const StateManager>& manager);

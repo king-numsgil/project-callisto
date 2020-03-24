@@ -2,6 +2,7 @@ set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 corrade_add_resource(UMBRIEL_IMGUI_RCS resource/imgui/resource.conf)
 corrade_add_resource(UMBRIEL_SPRITES_RCS resource/sprites/resource.conf)
+corrade_add_resource(UMBRIEL_SHADERS_RCS resource/shaders/resource.conf)
 
 add_executable(UmbrielGame
 		include/umbriel/physics/ChipmunkHandle.hpp
@@ -13,15 +14,18 @@ add_executable(UmbrielGame
 		source/physics/Body.cpp
 
 		include/umbriel/Components.hpp
+		include/umbriel/FlatShader.hpp
 		include/umbriel/GameState.hpp
 		include/umbriel/State.hpp
 		include/umbriel/Types.hpp
 		include/umbriel/Log.hpp
 		source/Components.cpp
+		source/FlatShader.cpp
 		source/GameState.cpp
 		source/State.cpp
 		source/main.cpp
 		${UMBRIEL_SPRITES_RCS}
+		${UMBRIEL_SHADERS_RCS}
 
 		include/umbriel/ImContext.hpp
 		source/ImContext.cpp

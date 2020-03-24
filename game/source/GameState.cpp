@@ -10,13 +10,13 @@ using namespace Magnum;
 namespace umbriel
 {
 	GameState::GameState(const std::weak_ptr<const StateManager>& manager)
-			: State(manager), _flat{Shaders::Flat2D::Flag::Textured}
+			: State(manager), _flat{FlatShader::Flag::Textured}
 	{
 		_player = _registry.create();
 		_registry.assign<SpriteComponent>(_player).create("player_b.png", {30.f, 30.f});
 
-		_proj = f32mat3::projection({1280, 768});
-		_view = f32dcomp::translation({0.f, 0.f});
+		_proj = f64mat3::projection({1280, 768});
+		_view = f64dcomp::translation({0., 0.});
 
 		Debug{} << "GameState started!";
 	}
@@ -29,9 +29,9 @@ namespace umbriel
 		_registry.view<SpriteComponent>().each(
 				[this](SpriteComponent& sprite)
 				{
-					f32dcomp model{IdentityInit};
-					_flat.bindTexture(sprite._texture)
-							.setTransformationProjectionMatrix(_proj * (_view * model).toMatrix());
+					f64dcomp model{IdentityInit};
+					_flat.bind_texture(sprite._texture)
+							.set_transformation_projection_matrix(_proj * (_view * model).toMatrix());
 					sprite._mesh.draw(_flat);
 				}
 		);
@@ -41,18 +41,18 @@ namespace umbriel
 
 	void GameState::key_press_event(State::KeyEvent& event)
 	{
-		if (event.key() == State::KeyEvent::Key::W && _accel <= .1f)
+		if (event.key() == State::KeyEvent::Key::W && _accel <= .1)
 		{
-			_accel = 1000.f;
+			_accel = 1000.;
 			Debug{} << "Thrust on";
 		}
 	}
 
 	void GameState::key_release_event(State::KeyEvent& event)
 	{
-		if (event.key() == State::KeyEvent::Key::W && _accel >= .1f)
+		if (event.key() == State::KeyEvent::Key::W && _accel >= .1)
 		{
-			_accel = 0.f;
+			_accel = 0.;
 			Debug{} << "Thrust off";
 		}
 	}
