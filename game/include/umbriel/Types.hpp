@@ -172,11 +172,9 @@ using Magnum::Math::Literals::operator ""_deg;
 using f64rad = Magnum::Math::Rad<f64>;
 using Magnum::Math::Literals::operator ""_rad;
 
-#include <box2d/b2_math.h>
-
 namespace Magnum::Math::Implementation
 {
-	template<>
+	/*template<>
 	struct VectorConverter<2, Float, b2Vec2>
 	{
 		static inline Vector<2, Float> from(b2Vec2 const& other)
@@ -235,5 +233,5 @@ namespace Magnum::Math::Implementation
 			f32vec2 pos{other.translation()};
 			return {{pos.x() / 10.f, pos.y() / 10.f}, (b2Rot) other.rotation()};
 		}
-	};
+	};*/
 }

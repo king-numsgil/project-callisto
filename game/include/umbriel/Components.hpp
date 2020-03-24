@@ -3,7 +3,6 @@
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
-#include <box2d/b2_body.h>
 
 #include <umbriel/Types.hpp>
 
@@ -11,7 +10,7 @@ namespace umbriel
 {
 	struct BodyComponent
 	{
-		b2Body* _body{nullptr};
+		//b2Body* _body{nullptr};
 	};
 
 	struct SpriteComponent

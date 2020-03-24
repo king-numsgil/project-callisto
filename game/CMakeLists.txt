@@ -34,7 +34,7 @@ target_include_directories(UmbrielGame
 
 target_link_libraries(UmbrielGame
 	PRIVATE
-		Json EnTT ImGUI box2d
+		Json EnTT ImGUI chipmunk_static
 
 		Corrade::Containers
 		Corrade::Utility

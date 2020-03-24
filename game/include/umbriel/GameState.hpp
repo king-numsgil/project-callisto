@@ -3,7 +3,6 @@
 #include <Magnum/Shaders/Flat.h>
 #include <Magnum/GL/Texture.h>
 #include <Magnum/GL/Mesh.h>
-#include <box2d/box2d.h>
 #include <entt/entt.hpp>
 
 #include <umbriel/State.hpp>
@@ -13,7 +12,7 @@ namespace umbriel
 	class GameState : public State
 	{
 		Magnum::Shaders::Flat2D _flat;
-		b2World _world{{0.f, 0.f}};
+		//b2World _world{{0.f, 0.f}};
 		entt::registry _registry{};
 		entt::entity _player{};
 
