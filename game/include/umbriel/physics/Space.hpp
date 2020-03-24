@@ -12,6 +12,6 @@ namespace umbriel::physics
 
 		~Space() override = default;
 
-		void step(f32 delta);
+		void step(f64 delta);
 	};
 }

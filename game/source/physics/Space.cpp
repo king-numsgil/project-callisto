@@ -2,12 +2,12 @@
 
 namespace umbriel::physics
 {
-	Space::Space() : ChipmunkHandle<cpSpace>(cpSpaceNew(), cpSpaceFree)
+	Space::Space() : ChipmunkHandle<cpSpace>{cpSpaceNew(), cpSpaceFree}
 	{
-		cpSpaceSetGravity(handle(), {0.f, 0.f});
+		cpSpaceSetGravity(handle(), {0., 0.});
 	}
 
-	void Space::step(f32 delta)
+	void Space::step(f64 delta)
 	{
 		cpSpaceStep(handle(), delta);
 	}
