@@ -23,18 +23,18 @@ public:
 		       GLConfiguration{}
 				       .setSrgbCapable(true)
 				       .setSampleCount(2)
-				       #ifndef NDEBUG
+#ifndef NDEBUG
 				       .addFlags(GLConfiguration::Flag::Debug)
-		#endif
+#endif
 		);
 		_imgui = ImContext{windowSize()};
 
-		#ifndef NDEBUG
+#ifndef NDEBUG
 		GL::Renderer::enable(GL::Renderer::Feature::DebugOutput);
 		GL::Renderer::enable(GL::Renderer::Feature::DebugOutputSynchronous);
 		GL::DebugOutput::setDefaultCallback();
 		GL::DebugOutput::setEnabled(GL::DebugOutput::Source::Api, GL::DebugOutput::Type::Other, {131185}, false);
-		#endif
+#endif
 
 		GL::Renderer::setClearColor(0xa5c9ea_rgbf);
 		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
