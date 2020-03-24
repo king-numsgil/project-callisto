@@ -62,6 +62,7 @@ target_link_libraries(UmbrielGame
 		Magnum::MeshTools
 		Magnum::Shaders
 		Magnum::Trade
+		Magnum::Text
 		Magnum::GL
 	PUBLIC
 		${DEFAULT_LIBRARIES}
