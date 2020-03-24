@@ -51,7 +51,7 @@ namespace umbriel
 				}
 		);
 
-		//_world.Step(delta, 6, 3);
+		_space.step(delta);
 	}
 
 	void GameState::key_press_event(State::KeyEvent& event)

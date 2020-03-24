@@ -5,6 +5,7 @@
 #include <Magnum/GL/Mesh.h>
 #include <entt/entt.hpp>
 
+#include <umbriel/physics/Space.hpp>
 #include <umbriel/State.hpp>
 
 namespace umbriel
@@ -12,6 +13,7 @@ namespace umbriel
 	class GameState : public State
 	{
 		Magnum::Shaders::Flat2D _flat;
+		physics::Space _space{};
 		//b2World _world{{0.f, 0.f}};
 		entt::registry _registry{};
 		entt::entity _player{};
