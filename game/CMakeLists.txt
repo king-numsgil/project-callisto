@@ -52,11 +52,12 @@ target_link_libraries(UmbrielGame
 		Corrade::Utility
 		Corrade::Main
 
+		MagnumPlugins::TinyGltfImporter
 		MagnumPlugins::StbImageImporter
+		MagnumPlugins::StbTrueTypeFont
 
 		Magnum::Magnum
 		Magnum::GlfwApplication
-		Magnum::SceneGraph
 		Magnum::Primitives
 		Magnum::MeshTools
 		Magnum::Shaders
