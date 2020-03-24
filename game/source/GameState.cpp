@@ -1,16 +1,6 @@
-#include <Magnum/MeshTools/CompressIndices.h>
-#include <Magnum/Trade/AbstractImporter.h>
-#include <Magnum/MeshTools/Interleave.h>
-#include <Magnum/MeshTools/Transform.h>
-#include <Magnum/Primitives/Square.h>
-#include <Corrade/Utility/Resource.h>
-#include <Magnum/Trade/MeshData2D.h>
-#include <Magnum/GL/TextureFormat.h>
-#include <Magnum/Trade/ImageData.h>
 #include <Magnum/GL/Renderer.h>
-#include <Magnum/ImageView.h>
-#include <Magnum/GL/Buffer.h>
 
+#include <umbriel/Components.hpp>
 #include <umbriel/GameState.hpp>
 #include <umbriel/Log.hpp>
 
@@ -20,45 +10,50 @@ using namespace Magnum;
 namespace umbriel
 {
 	GameState::GameState(const std::weak_ptr<const StateManager>& manager)
-			: State(manager), _flat{Shaders::Flat2D::Flag::Textured}, _player{}, _sprite{}
+			: State(manager), _flat{Shaders::Flat2D::Flag::Textured}
 	{
-		PluginManager::Manager<Trade::AbstractImporter> plugins;
-		auto importer = plugins.loadAndInstantiate("StbImageImporter");
-		if (!importer) Fatal{} << "Cannot load StbImageImporter plugin";
+		b2BodyDef playerBD{};
+		playerBD.angularDamping = .2f;
+		playerBD.linearDamping = .3f;
+		playerBD.type = b2_kinematicBody;
 
-		Utility::Resource const rs{"UmbrielSprites"};
-		if (!importer->openData(rs.getRaw("player_b.png")))
-			Fatal{} << "Cannot load 'player_b.png'";
+		b2PolygonShape playerShape{};
+		playerShape.SetAsBox(3.f, 3.f);
 
-		auto image = importer->image2D(0);
-		CORRADE_INTERNAL_ASSERT(image);
-		_player.setWrapping(GL::SamplerWrapping::ClampToEdge)
-				.setMagnificationFilter(GL::SamplerFilter::Nearest)
-				.setMinificationFilter(GL::SamplerFilter::Nearest)
-				.setStorage(1, GL::textureFormat(image->format()), image->size())
-				.setSubImage(0, {}, *image);
+		b2FixtureDef playerFix{};
+		playerFix.shape = &playerShape;
+		playerFix.density = 1.f;
+		playerFix.friction = .3f;
 
-		Trade::MeshData2D quad = Primitives::squareSolid(Primitives::SquareTextureCoords::Generate);
-		MeshTools::transformVectorsInPlace(f32mat3::scaling({30.f, 30.f}), quad.positions(0));
-		GL::Buffer sprite_data{};
-		sprite_data.setData(MeshTools::interleave(quad.positions(0), quad.textureCoords2D(0)));
-		_sprite.setPrimitive(quad.primitive())
-				.setCount(quad.positions(0).size())
-				.addVertexBuffer(std::move(sprite_data), 0, Shaders::Flat2D::Position{},
-				                 Shaders::Flat2D::TextureCoordinates{});
+		_player = _registry.create();
+		_registry.assign<SpriteComponent>(_player).create("player_b.png", {30.f, 30.f});
+		_registry.assign<BodyComponent>(_player)._body = _world.CreateBody(&playerBD);
+		_registry.get<BodyComponent>(_player)._body->CreateFixture(&playerFix);
 
 		_proj = f32mat3::projection({1280, 768});
-		_view = f32mat3::translation({0.f, 0.f});
+		_view = f32dcomp::translation({0.f, 0.f});
 
 		Debug{} << "GameState started!";
 	}
 
-	void GameState::draw_event(f32)
+	void GameState::draw_event(f32 delta)
 	{
 		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
-		_flat.bindTexture(_player)
-				.setTransformationProjectionMatrix(_proj * _view);
-		_sprite.draw(_flat);
+
+		_registry.view<BodyComponent, SpriteComponent>().each(
+				[this](BodyComponent& body, SpriteComponent& sprite)
+				{
+					if (body._body != nullptr)
+					{
+						f32dcomp model{body._body->GetTransform()};
+						_flat.bindTexture(sprite._texture)
+								.setTransformationProjectionMatrix(_proj * (_view * model).toMatrix());
+						sprite._mesh.draw(_flat);
+					}
+				}
+		);
+
+		_world.Step(delta, 6, 3);
 	}
 }
