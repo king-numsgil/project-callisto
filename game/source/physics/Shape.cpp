@@ -2,6 +2,9 @@
 
 namespace umbriel::physics
 {
+	Shape::Shape() : Shape{nullptr}
+	{}
+
 	Shape::Shape(cpShape* handle) : ChipmunkHandle<cpShape>{handle, cpShapeFree}
 	{}
 

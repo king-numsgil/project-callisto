@@ -7,6 +7,8 @@ namespace umbriel::physics
 	class Shape : public ChipmunkHandle<cpShape>
 	{
 	public:
+		Shape();
+
 		~Shape() override = default;
 
 		BoundingBox update(f64dcomp transform);
