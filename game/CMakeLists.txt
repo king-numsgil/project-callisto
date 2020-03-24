@@ -6,9 +6,15 @@ corrade_add_resource(UMBRIEL_SHADERS_RCS resource/shaders/resource.conf)
 
 add_executable(UmbrielGame
 		include/umbriel/physics/ChipmunkHandle.hpp
+		include/umbriel/physics/SegmentShape.hpp
+		include/umbriel/physics/CircleShape.hpp
+		include/umbriel/physics/BoxShape.hpp
 		include/umbriel/physics/Shape.hpp
 		include/umbriel/physics/Space.hpp
 		include/umbriel/physics/Body.hpp
+		source/physics/SegmentShape.cpp
+		source/physics/CircleShape.cpp
+		source/physics/BoxShape.cpp
 		source/physics/Shape.cpp
 		source/physics/Space.cpp
 		source/physics/Body.cpp

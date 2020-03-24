@@ -26,7 +26,7 @@ namespace umbriel::physics
 			}
 		}
 
-		inline T const* handle() const
+		inline T* handle() const
 		{ return _handle; }
 
 		inline T* handle()
