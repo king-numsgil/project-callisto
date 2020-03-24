@@ -226,13 +226,14 @@ namespace Magnum::Math::Implementation
 	{
 		static inline DualComplex<Float> from(b2Transform const& other)
 		{
-			return DualComplex<Float>::translation(Vector2<Float>(other.p)) *
+			return DualComplex<Float>::translation(Vector2<Float>(other.p) * 10.f) *
 			       DualComplex<Float>::rotation(Rad<Float>{other.q.GetAngle()});
 		}
 
 		static inline b2Transform to(DualComplex<Float> const& other)
 		{
-			return {(b2Vec2) other.translation(), (b2Rot) other.rotation()};
+			f32vec2 pos{other.translation()};
+			return {{pos.x() / 10.f, pos.y() / 10.f}, (b2Rot) other.rotation()};
 		}
 	};
 }
