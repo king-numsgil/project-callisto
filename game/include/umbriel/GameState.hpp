@@ -20,9 +20,15 @@ namespace umbriel
 		f32mat3 _proj{IdentityInit};
 		f32dcomp _view{IdentityInit};
 
+		f32 _accel{0.f};
+
 	public:
 		explicit GameState(const std::weak_ptr<const StateManager>& manager);
 
 		void draw_event(f32 delta) override;
+
+		virtual void key_press_event(KeyEvent& event) override;
+
+		virtual void key_release_event(KeyEvent& event) override;
 	};
 }

@@ -15,7 +15,7 @@ namespace umbriel
 		b2BodyDef playerBD{};
 		playerBD.angularDamping = .2f;
 		playerBD.linearDamping = .3f;
-		playerBD.type = b2_kinematicBody;
+		playerBD.type = b2_dynamicBody;
 
 		b2PolygonShape playerShape{};
 		playerShape.SetAsBox(3.f, 3.f);
@@ -41,6 +41,9 @@ namespace umbriel
 		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 
+		b2Body* pBody = _registry.get<BodyComponent>(_player)._body;
+		pBody->ApplyForceToCenter(pBody->GetWorldVector({0.f, _accel}), true);
+
 		_registry.view<BodyComponent, SpriteComponent>().each(
 				[this](BodyComponent& body, SpriteComponent& sprite)
 				{
@@ -55,5 +58,23 @@ namespace umbriel
 		);
 
 		_world.Step(delta, 6, 3);
+	}
+
+	void GameState::key_press_event(State::KeyEvent& event)
+	{
+		if (event.key() == State::KeyEvent::Key::W && _accel <= .1f)
+		{
+			_accel = 1000.f;
+			Debug{} << "Thrust on";
+		}
+	}
+
+	void GameState::key_release_event(State::KeyEvent& event)
+	{
+		if (event.key() == State::KeyEvent::Key::W && _accel >= .1f)
+		{
+			_accel = 0.f;
+			Debug{} << "Thrust off";
+		}
 	}
 }
