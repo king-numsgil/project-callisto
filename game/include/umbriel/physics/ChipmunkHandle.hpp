@@ -13,9 +13,25 @@ namespace umbriel::physics
 
 		ChipmunkHandle& operator=(ChipmunkHandle<T> const&) = delete;
 
-		ChipmunkHandle(ChipmunkHandle&&) noexcept = default;
+		ChipmunkHandle(ChipmunkHandle&& other) noexcept
+		{
+			_handle = std::move(other._handle);
+			_deleter = std::move(other._deleter);
 
-		ChipmunkHandle& operator=(ChipmunkHandle&&) noexcept = default;
+			other._deleter = {};
+			other._handle = nullptr;
+		}
+
+		ChipmunkHandle& operator=(ChipmunkHandle&& other) noexcept
+		{
+			_handle = std::move(other._handle);
+			_deleter = std::move(other._deleter);
+
+			other._deleter = {};
+			other._handle = nullptr;
+
+			return *this;
+		}
 
 		inline virtual ~ChipmunkHandle()
 		{
