@@ -31,7 +31,7 @@
 #ifdef EXPLICIT_UNIFORM_LOCATION
 layout(location = 0)
 #endif
-uniform highp dmat3 transformationProjectionMatrix = dmat3(1.0);
+uniform dmat3 transformationProjectionMatrix = dmat3(1.0);
 
 #ifdef EXPLICIT_ATTRIB_LOCATION
 layout(location = POSITION_ATTRIBUTE_LOCATION)
