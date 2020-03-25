@@ -20,6 +20,10 @@ namespace umbriel::physics
 
 		~Body() override = default;
 
+		Body(Body&&) noexcept = default;
+
+		Body& operator=(Body&&) noexcept = default;
+
 		[[nodiscard]]
 		f64dcomp transform() const;
 

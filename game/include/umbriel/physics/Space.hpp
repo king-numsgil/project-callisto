@@ -21,6 +21,10 @@ namespace umbriel::physics
 
 		~Space() override = default;
 
+		Space(Space&&) noexcept = default;
+
+		Space& operator=(Space&&) noexcept = default;
+
 		void step(f64 delta);
 	};
 }

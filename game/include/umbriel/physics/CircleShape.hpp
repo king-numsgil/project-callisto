@@ -13,6 +13,10 @@ namespace umbriel::physics
 
 		~CircleShape() override = default;
 
+		CircleShape(CircleShape&&) noexcept = default;
+
+		CircleShape& operator=(CircleShape&&) noexcept = default;
+
 		[[nodiscard]]
 		f64vec2 offset() const;
 

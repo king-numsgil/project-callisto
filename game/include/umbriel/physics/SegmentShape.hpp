@@ -11,6 +11,12 @@ namespace umbriel::physics
 	public:
 		SegmentShape(Space& space, Body& body, f64vec2 a, f64vec2 b, f64 radius);
 
+		~SegmentShape() override = default;
+
+		SegmentShape(SegmentShape&&) noexcept = default;
+
+		SegmentShape& operator=(SegmentShape&&) noexcept = default;
+
 		void set_neighbors(f64vec2 prev, f64vec2 next);
 
 		[[nodiscard]]

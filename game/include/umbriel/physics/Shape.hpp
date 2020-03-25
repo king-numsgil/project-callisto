@@ -11,6 +11,10 @@ namespace umbriel::physics
 
 		~Shape() override = default;
 
+		Shape(Shape&&) noexcept = default;
+
+		Shape& operator=(Shape&&) noexcept = default;
+
 		BoundingBox update(f64dcomp transform);
 
 		[[nodiscard]]
