@@ -4,13 +4,19 @@
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
 
+#include <umbriel/physics/Shape.hpp>
+#include <umbriel/physics/Body.hpp>
 #include <umbriel/Types.hpp>
+
+#include <memory>
+#include <vector>
 
 namespace umbriel
 {
 	struct BodyComponent
 	{
-		//b2Body* _body{nullptr};
+		std::vector<std::unique_ptr<physics::Shape>> _shapes{};
+		physics::Body _body{};
 	};
 
 	struct SpriteComponent
