@@ -1,5 +1,6 @@
 #include <Magnum/GL/Renderer.h>
 
+#include <umbriel/physics/BoxShape.hpp>
 #include <umbriel/Components.hpp>
 #include <umbriel/GameState.hpp>
 #include <umbriel/Log.hpp>
@@ -14,6 +15,10 @@ namespace umbriel
 	{
 		_player = _registry.create();
 		_registry.assign<SpriteComponent>(_player).create("player_b.png", {30.f, 30.f});
+		auto& playerBody = _registry.assign<BodyComponent>(_player);
+		playerBody._body = physics::Body{_space, 10, physics::moment_for_box(10, 30, 30)};
+		playerBody._shapes.push_back(std::make_unique<physics::BoxShape>(_space, playerBody._body, 30, 30, 0));
+		playerBody._body.type(physics::BodyType::Dynamic);
 
 		_proj = f64mat3::projection({1280, 768});
 		_view = f64dcomp::translation({0., 0.});
@@ -26,10 +31,12 @@ namespace umbriel
 		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 
-		_registry.view<SpriteComponent>().each(
-				[this](SpriteComponent& sprite)
+		_registry.get<BodyComponent>(_player)._body.apply_force_at_local_point({0., _accel}, {0., 0.});
+
+		_registry.view<BodyComponent, SpriteComponent>().each(
+				[this](BodyComponent& body, SpriteComponent& sprite)
 				{
-					f64dcomp model{IdentityInit};
+					f64dcomp model = body._body.transform();
 					_flat.bind_texture(sprite._texture)
 							.set_transformation_projection_matrix(_proj * (_view * model).toMatrix());
 					sprite._mesh.draw(_flat);
