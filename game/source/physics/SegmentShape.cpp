@@ -2,8 +2,7 @@
 
 namespace umbriel::physics
 {
-	SegmentShape::SegmentShape(Space& space, Body& body, f64vec2 a, f64vec2 b, f64 radius)
-			: Shape{cpSpaceAddShape(space.handle(), cpSegmentShapeNew(body.handle(), {a.x(), a.y()}, {b.x(), b.y()}, radius))}
+	SegmentShape::SegmentShape(cpShape* shape) : Shape{shape}
 	{}
 
 	void SegmentShape::set_neighbors(f64vec2 prev, f64vec2 next)

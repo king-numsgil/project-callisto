@@ -1,13 +1,23 @@
 #pragma once
 
-#include <umbriel/physics/Space.hpp>
+#include <umbriel/physics/ChipmunkHandle.hpp>
+#include <chipmunk/chipmunk.h>
 
 namespace umbriel::physics
 {
+	struct BoundingBox
+	{
+		BoundingBox(f64 left, f64 bottom, f64 right, f64 top)
+				: _left{left}, _bottom{bottom}, _right{right}, _top{top}
+		{}
+
+		f64 _left, _bottom, _right, _top;
+	};
+
 	class Shape : public ChipmunkHandle<cpShape>
 	{
 	public:
-		Shape();
+		explicit Shape(cpShape* handle = nullptr);
 
 		~Shape() override = default;
 
@@ -63,8 +73,5 @@ namespace umbriel::physics
 		u64 collision_type() const;
 
 		void collision_type(u64 value);
-
-	protected:
-		explicit Shape(cpShape* handle);
 	};
 }

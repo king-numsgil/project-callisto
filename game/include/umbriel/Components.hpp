@@ -15,7 +15,6 @@ namespace umbriel
 {
 	struct BodyComponent
 	{
-		std::vector<std::unique_ptr<physics::Shape>> _shapes{};
 		physics::Body _body{};
 	};
 

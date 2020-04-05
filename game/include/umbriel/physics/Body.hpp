@@ -1,7 +1,13 @@
 #pragma once
 
 #include <umbriel/physics/ChipmunkHandle.hpp>
+#include <Corrade/Containers/Pointer.h>
 #include <chipmunk/chipmunk.h>
+#include <vector>
+
+#include <umbriel/physics/SegmentShape.hpp>
+#include <umbriel/physics/CircleShape.hpp>
+#include <umbriel/physics/BoxShape.hpp>
 
 namespace umbriel::physics
 {
@@ -94,6 +100,15 @@ namespace umbriel::physics
 
 		[[nodiscard]]
 		f64 kinetic_energy() const;
+
+		BoxShape& addBoxShape(f64 width, f64 height, f64 radius);
+
+		CircleShape& addCircleShape(f64 radius, f64vec2 offset = {});
+
+		SegmentShape& addSegmentShape(f64vec2 a, f64vec2 b, f64 radius);
+
+	private:
+		std::vector<Corrade::Containers::Pointer<Shape>> _shapes{};
 	};
 
 	static inline f32 moment_for_circle(f32 mass, f32 r1, f32 r2, f32vec2 offset)

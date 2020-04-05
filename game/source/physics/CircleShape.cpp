@@ -2,8 +2,7 @@
 
 namespace umbriel::physics
 {
-	CircleShape::CircleShape(Space& space, Body& body, f64 radius, const f64vec2& offset)
-			: Shape{cpSpaceAddShape(space.handle(), cpCircleShapeNew(body.handle(), radius, {offset.x(), offset.y()}))}
+	CircleShape::CircleShape(cpShape* shape) : Shape{shape}
 	{}
 
 	f64vec2 CircleShape::offset() const

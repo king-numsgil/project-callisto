@@ -157,4 +157,34 @@ namespace umbriel::physics
 	{
 		return cpBodyKineticEnergy(handle());
 	}
+
+	BoxShape& Body::addBoxShape(f64 width, f64 height, f64 radius)
+	{
+		auto& ref = _shapes.emplace_back(Corrade::Containers::pointer<BoxShape>(
+				cpSpaceAddShape(
+						cpBodyGetSpace(handle()),
+						cpBoxShapeNew(handle(), width, height, radius))
+		));
+		return *dynamic_cast<BoxShape*>(ref.get());
+	}
+
+	CircleShape& Body::addCircleShape(f64 radius, f64vec2 offset)
+	{
+		auto& ref = _shapes.emplace_back(Corrade::Containers::pointer<CircleShape>(
+				cpSpaceAddShape(
+						cpBodyGetSpace(handle()),
+						cpCircleShapeNew(handle(), radius, {offset.x(), offset.y()}))
+		));
+		return *dynamic_cast<CircleShape*>(ref.get());
+	}
+
+	SegmentShape& Body::addSegmentShape(f64vec2 a, f64vec2 b, f64 radius)
+	{
+		auto& ref = _shapes.emplace_back(Corrade::Containers::pointer<SegmentShape>(
+				cpSpaceAddShape(
+						cpBodyGetSpace(handle()),
+						cpSegmentShapeNew(handle(), {a.x(), a.y()}, {b.x(), b.y()}, radius))
+		));
+		return *dynamic_cast<SegmentShape*>(ref.get());
+	}
 }
