@@ -1,6 +1,7 @@
 #pragma once
 
 #include <umbriel/physics/ChipmunkHandle.hpp>
+#include <Corrade/Containers/Reference.h>
 #include <Corrade/Containers/Pointer.h>
 #include <chipmunk/chipmunk.h>
 #include <vector>
@@ -101,11 +102,11 @@ namespace umbriel::physics
 		[[nodiscard]]
 		f64 kinetic_energy() const;
 
-		BoxShape& addBoxShape(f64 width, f64 height, f64 radius);
+		Corrade::Containers::Reference<BoxShape> addBoxShape(f64 width, f64 height, f64 radius);
 
-		CircleShape& addCircleShape(f64 radius, f64vec2 offset = {});
+		Corrade::Containers::Reference<CircleShape> addCircleShape(f64 radius, f64vec2 offset = {});
 
-		SegmentShape& addSegmentShape(f64vec2 a, f64vec2 b, f64 radius);
+		Corrade::Containers::Reference<SegmentShape> addSegmentShape(f64vec2 a, f64vec2 b, f64 radius);
 
 	private:
 		std::vector<Corrade::Containers::Pointer<Shape>> _shapes{};
