@@ -28,7 +28,6 @@ namespace umbriel
 
 	void GameState::draw_event(f32 delta)
 	{
-		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 
 		_registry.get<BodyComponent>(_player)._body.apply_force_at_local_point({0., _accel}, {0., 0.});

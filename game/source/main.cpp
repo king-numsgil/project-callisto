@@ -36,6 +36,7 @@ public:
 		GL::DebugOutput::setEnabled(GL::DebugOutput::Source::Api, GL::DebugOutput::Type::Other, {131185}, false);
 #endif
 
+		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::setClearColor(0xa5c9ea_rgbf);
 		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add, GL::Renderer::BlendEquation::Add);
 		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
@@ -62,7 +63,6 @@ private:
 		_manager.draw_event(_time.previousFrameDuration());
 
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
-		GL::Renderer::disable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
 		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 
@@ -70,7 +70,6 @@ private:
 
 		GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
 		GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-		GL::Renderer::enable(GL::Renderer::Feature::DepthTest);
 		GL::Renderer::disable(GL::Renderer::Feature::Blending);
 
 		swapBuffers();
