@@ -1,6 +1,7 @@
 #pragma once
 
-#include <umbriel/physics/Space.hpp>
+#include <umbriel/physics/ChipmunkHandle.hpp>
+#include <chipmunk/chipmunk.h>
 
 namespace umbriel::physics
 {
@@ -14,9 +15,7 @@ namespace umbriel::physics
 	class Body : public ChipmunkHandle<cpBody>
 	{
 	public:
-		Body();
-
-		Body(Space& space, f64 mass, f64 moment);
+		explicit Body(cpBody* body = nullptr);
 
 		~Body() override = default;
 

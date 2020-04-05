@@ -16,7 +16,7 @@ namespace umbriel
 		_player = _registry.create();
 		_registry.assign<SpriteComponent>(_player).create("player_b.png", {30.f, 30.f});
 		auto& playerBody = _registry.assign<BodyComponent>(_player);
-		playerBody._body = physics::Body{_space, 10, physics::moment_for_box(10, 30, 30)};
+		playerBody._body = _space.addBody(10, physics::moment_for_box(10, 30, 30));
 		playerBody._shapes.push_back(std::make_unique<physics::BoxShape>(_space, playerBody._body, 30, 30, 0));
 		playerBody._body.type(physics::BodyType::Dynamic);
 

@@ -11,4 +11,19 @@ namespace umbriel::physics
 	{
 		cpSpaceStep(handle(), delta);
 	}
+
+	Body Space::addBody(f64 mass, f64 moment)
+	{
+		return Body{cpSpaceAddBody(handle(), cpBodyNew(mass, moment))};
+	}
+
+	Body Space::addStaticBody()
+	{
+		return Body{cpSpaceAddBody(handle(), cpBodyNewStatic())};
+	}
+
+	Body Space::addKinematicBody()
+	{
+		return Body{cpSpaceAddBody(handle(), cpBodyNewKinematic())};
+	}
 }
