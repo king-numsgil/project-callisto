@@ -1,6 +1,10 @@
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
+corrade_add_resource(CALLISTO_SHADERS_RCS resource/shaders/resource.conf)
+
 add_executable(CallistoGame
+	${CALLISTO_SHADERS_RCS}
+
 	source/main.cpp
 	source/ImContext.cpp
 	source/ImContext.hpp
