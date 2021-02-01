@@ -7,11 +7,11 @@
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData.h>
+#include <Magnum/GL/Version.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/ImageView.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
-#include <Magnum/GL/Version.h>
 
 #include "HexGrid.hpp"
 
@@ -24,50 +24,6 @@ struct HexPointData
 	f32vec2 position{};
 	i32 layer{-1};
 };
-
-constexpr Trade::MeshAttributeData AttributeData2DTextureCoords[]{
-		Trade::MeshAttributeData{Trade::MeshAttribute::Position, VertexFormat::Vector2,
-		                         0, 0, 2 * sizeof(f32vec2)},
-		Trade::MeshAttributeData{Trade::MeshAttribute::TextureCoordinates, VertexFormat::Vector2,
-		                         sizeof(f32vec2), 0, 2 * sizeof(f32vec2)}
-};
-
-Trade::MeshData hexSolid(f32 radius = 1.f)
-{
-	const u32 segments = 6;
-
-	Containers::Array<Trade::MeshAttributeData> attributes
-			= Trade::meshAttributeDataNonOwningArray(AttributeData2DTextureCoords);
-
-	const std::size_t stride = attributes[0].stride();
-	Containers::Array<char> vertexData{stride * (segments + 2)};
-
-	Containers::StridedArrayView1D<Vector2> positions
-			{vertexData,
-			 reinterpret_cast<f32vec2*>(vertexData.begin()),
-			 segments + 2, std::ptrdiff_t(stride)};
-	positions[0] = {};
-	/* Points on the circle. The first/last point is here twice to close the
-	   circle properly. */
-	const f32rad angleIncrement(f32const::tau() / segments);
-	for (u32 i = 0; i != segments + 1; ++i)
-	{
-		const f32rad angle(f32(i) * angleIncrement);
-		const auto[sin, cos] = Math::sincos(angle);
-		positions[i + 1] = {cos, sin};
-	}
-
-	Containers::StridedArrayView1D<Vector2> textureCoords
-			{vertexData,
-			 reinterpret_cast<f32vec2*>(vertexData.begin() + sizeof(f32vec2)),
-			 positions.size(), std::ptrdiff_t(stride)};
-	for (std::size_t i = 0; i != positions.size(); ++i)
-		textureCoords[i] = positions[i] * .5f + f32vec2{.5f};
-
-	MeshTools::transformPointsInPlace(f32mat3::scaling(f32vec2{radius}), positions);
-	return Trade::MeshData
-			{MeshPrimitive::TriangleFan, std::move(vertexData), std::move(attributes), u32(positions.size())};
-}
 
 namespace hex
 {

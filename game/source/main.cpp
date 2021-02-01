@@ -86,13 +86,6 @@ private:
 
 		_grid.render(_proj * _view);
 
-		/*for (auto& tile: _grid)
-		{
-			_shader.setTransformationProjectionMatrix(_proj * _view * f32mat3::translation(tile.first.to_position()));
-			_shader.bindTexture(tile.second.texture);
-			_shader.draw(tile.second.mesh);
-		}*/
-
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
 		GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
