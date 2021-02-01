@@ -58,6 +58,13 @@ public:
 		_scr.file("assets/script/test.lua");
 		_grid.load_terrain_types();
 		_grid.create_texture();
+
+		_grid.insert({0, 0}, 0);
+		if (auto opt = _grid.at({0, 0}))
+		{
+			Debug{} << opt.value().get().coord;
+			opt.value().get().type_index = 66;
+		}
 	}
 
 	virtual ~CallistoGame() = default;
