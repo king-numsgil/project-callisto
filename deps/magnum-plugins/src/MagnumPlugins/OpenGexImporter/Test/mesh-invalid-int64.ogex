@@ -1,7 +1,0 @@
-GeometryObject /*unsupportedIndexType*/ {
-    Mesh {
-        VertexArray (attrib = "position") { float { } }
-
-        IndexArray { unsigned_int64[3] { } }
-    }
-}
