@@ -1,0 +1,14 @@
+[
+	{
+		"name": "dirt",
+		"texture": "assets/map/dirt.tga"
+	},
+	{
+		"name": "grass",
+		"texture": "assets/map/grass.tga"
+	},
+	{
+		"name": "stone",
+		"texture": "assets/map/stone.tga"
+	}
+]
