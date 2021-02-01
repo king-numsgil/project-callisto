@@ -59,12 +59,10 @@ public:
 		_grid.load_terrain_types();
 		_grid.create_texture();
 
-		_grid.insert({0, 0}, 2);
-		if (auto opt = _grid.at({0, 0}))
-		{
-			Debug{} << opt.value().get().coord;
-			opt.value().get().type_index = 66;
-		}
+		_grid.insert({0, 1}, 1);
+		_grid.insert({0, 0}, 1);
+		_grid.insert({0, -1}, 2);
+		_grid.insert({1, 0}, 0);
 	}
 
 	virtual ~CallistoGame() = default;
