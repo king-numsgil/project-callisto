@@ -1,6 +1,8 @@
 #pragma once
 
+#include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/TextureArray.h>
+#include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/Mesh.h>
 #include <unordered_map>
 
@@ -165,12 +167,44 @@ namespace hex
 	{
 		string name, texture;
 		u64 index;
-		optional<u32> layer;
+		i32 layer;
 	};
 
 	class Grid
 	{
 	public:
+		class HexShader : public Magnum::GL::AbstractShaderProgram
+		{
+		public:
+			using Coords = Magnum::GL::Attribute<0, f32vec2>;
+			using Layer = Magnum::GL::Attribute<1, i32>;
+
+			explicit HexShader();
+
+			explicit HexShader(NoCreateT) noexcept: Magnum::GL::AbstractShaderProgram{NoCreate}
+			{}
+
+			HexShader(HexShader const&) noexcept = delete;
+
+			HexShader& operator=(HexShader const&) noexcept = delete;
+
+			HexShader(HexShader&&) noexcept = default;
+
+			HexShader& operator=(HexShader&&) noexcept = default;
+
+			HexShader& set_transformation_matrix(f32mat3 const& matrix);
+
+			HexShader& set_radius(f32 radius = 100.f);
+
+			HexShader& bind_texture(Magnum::GL::Texture2DArray& texture);
+
+		private:
+			using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
+			using Magnum::GL::AbstractShaderProgram::dispatchCompute;
+
+			i32 _transformLocation{0}, _radiusLocation{1};
+		};
+
 		Grid() = default;
 
 		~Grid() = default;
@@ -197,9 +231,15 @@ namespace hex
 
 		void insert(Axial const& coords, u64 type_index);
 
+		void render(f32mat3 const& transform);
+
 	private:
 		Magnum::GL::Texture2DArray _texArray{NoCreate};
 		vector<TerrainTypeInfo> _types{};
 		std::unordered_map<Axial, Tile> _grid{};
+
+		Magnum::GL::Buffer _pointBuffer{NoCreate};
+		Magnum::GL::Mesh _mesh{NoCreate};
+		HexShader _shader{NoCreate};
 	};
 }

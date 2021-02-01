@@ -59,7 +59,7 @@ public:
 		_grid.load_terrain_types();
 		_grid.create_texture();
 
-		_grid.insert({0, 0}, 0);
+		_grid.insert({0, 0}, 2);
 		if (auto opt = _grid.at({0, 0}))
 		{
 			Debug{} << opt.value().get().coord;
@@ -85,6 +85,8 @@ private:
 		GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
 		_ctx.newFrame();
 		_ctx.updateApplicationCursor(*this);
+
+		_grid.render(_proj * _view);
 
 		/*for (auto& tile: _grid)
 		{

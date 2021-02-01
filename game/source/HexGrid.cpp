@@ -1,19 +1,29 @@
 #include <Magnum/Trade/AbstractImporter.h>
+#include <Corrade/Containers/Reference.h>
 #include <Corrade/Containers/Optional.h>
 #include <Magnum/MeshTools/Transform.h>
 #include <Magnum/MeshTools/Compile.h>
+#include <Corrade/Utility/Resource.h>
 #include <Magnum/GL/TextureFormat.h>
 #include <Magnum/Trade/ImageData.h>
 #include <Magnum/Trade/MeshData.h>
+#include <Magnum/GL/Shader.h>
 #include <Magnum/ImageView.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
+#include <Magnum/GL/Version.h>
 
 #include "HexGrid.hpp"
 
 using namespace Magnum;
 
 using json = nlohmann::json;
+
+struct HexPointData
+{
+	f32vec2 position{};
+	i32 layer{-1};
+};
 
 constexpr Trade::MeshAttributeData AttributeData2DTextureCoords[]{
 		Trade::MeshAttributeData{Trade::MeshAttribute::Position, VertexFormat::Vector2,
@@ -110,28 +120,44 @@ namespace hex
 
 	Tile::Tile(Axial const& Coord, u64 TypeIndex)
 			: coord{Coord}, type_index{TypeIndex}
+	{}
+
+	Grid::HexShader::HexShader()
 	{
-		/*PluginManager::Manager<Trade::AbstractImporter> plugins;
-		auto importer = plugins.loadAndInstantiate("StbImageImporter");
-		if (!importer) Fatal{} << "Cannot load StbImageImporter plugin";
+		Utility::Resource rs("CallistoShaders");
 
-		string filename = detail::get_texture_filename(type);
-		if (!importer->openFile(filename))
-			Fatal{} << "Cannot load" << filename;
+		GL::Shader vert{GL::Version::GL450, GL::Shader::Type::Vertex};
+		vert.addSource(rs.get("hex/vert.glsl"));
 
-		auto image = importer->image2D(0);
-		CORRADE_INTERNAL_ASSERT(image);
+		GL::Shader geo{GL::Version::GL450, GL::Shader::Type::Geometry};
+		geo.addSource(rs.get("hex/geo.glsl"));
 
-		texture.setWrapping(GL::SamplerWrapping::ClampToEdge)
-				.setMagnificationFilter(GL::SamplerFilter::Nearest)
-				.setMinificationFilter(GL::SamplerFilter::Linear)
-				.setMaxLevel(4)
-				.setStorage(1, GL::textureFormat(image->format()), image->size())
-				.setSubImage(0, {}, *image)
-				.generateMipmap();
+		GL::Shader frag{GL::Version::GL450, GL::Shader::Type::Fragment};
+		frag.addSource(rs.get("hex/frag.glsl"));
 
-		Trade::MeshData data = hexSolid(radius);
-		mesh = MeshTools::compile(data, MeshTools::CompileFlag::GenerateFlatNormals);*/
+		CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert, geo, frag}));
+
+		attachShaders({vert, geo, frag});
+
+		CORRADE_INTERNAL_ASSERT_OUTPUT(link());
+	}
+
+	Grid::HexShader& Grid::HexShader::set_transformation_matrix(f32mat3 const& matrix)
+	{
+		setUniform(_transformLocation, matrix);
+		return *this;
+	}
+
+	Grid::HexShader& Grid::HexShader::set_radius(f32 radius)
+	{
+		setUniform(_radiusLocation, radius);
+		return *this;
+	}
+
+	Grid::HexShader& Grid::HexShader::bind_texture(GL::Texture2DArray& texture)
+	{
+		texture.bind(0);
+		return *this;
 	}
 
 	void Grid::load_terrain_types()
@@ -161,7 +187,7 @@ namespace hex
 			tmp.name = type["name"].get<string>();
 			tmp.texture = type["texture"].get<string>();
 			tmp.index = _types.size();
-			tmp.layer = nullopt;
+			tmp.layer = -1;
 
 			_types.push_back(std::move(tmp));
 		}
@@ -191,7 +217,7 @@ namespace hex
 
 			ImageView3D image{file->format(), {512, 512, 1}, file->data()};
 			_texArray.setSubImage(0, i32vec3::zAxis(i), image);
-			_types[i].layer = i;
+			_types[i].layer = (i32) i;
 		}
 
 		_texArray.generateMipmap();
@@ -208,5 +234,35 @@ namespace hex
 	void Grid::insert(Axial const& coords, u64 type_index)
 	{
 		_grid.insert_or_assign(coords, Tile{coords, type_index});
+	}
+
+	void Grid::render(f32mat3 const& transform)
+	{
+		if (_shader.id() == 0) _shader = HexShader{};
+
+		if (_mesh.id() == 0)
+		{
+			Containers::Array<HexPointData> points{Containers::DefaultInit, _grid.size()};
+			u64 index = 0;
+
+			for (auto& tile : _grid)
+			{
+				points[index].layer = _types[tile.second.type_index].layer;
+				points[index].position = f32vec2{(f32) tile.second.coord.q(), (f32) tile.second.coord.r()};
+				index++;
+			}
+
+			_pointBuffer = GL::Buffer{};
+			_pointBuffer.setData(points);
+
+			_mesh = GL::Mesh{};
+			_mesh.setPrimitive(GL::MeshPrimitive::Points)
+					.setCount(_grid.size())
+					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
+		}
+
+		_shader.set_transformation_matrix(transform)
+				.bind_texture(_texArray)
+				.draw(_mesh);
 	}
 }
