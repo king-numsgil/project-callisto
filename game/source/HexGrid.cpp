@@ -190,6 +190,7 @@ namespace hex
 	void Grid::insert(Axial const& coords, u64 type_index)
 	{
 		_grid.insert_or_assign(coords, Tile{coords, type_index});
+		_dirty = true;
 	}
 
 	void Grid::render(f32mat3 const& transform)
@@ -197,6 +198,16 @@ namespace hex
 		if (_shader.id() == 0) _shader = HexShader{};
 
 		if (_mesh.id() == 0)
+		{
+			_pointBuffer = GL::Buffer{};
+
+			_mesh = GL::Mesh{};
+			_mesh.setPrimitive(GL::MeshPrimitive::Points)
+					.setCount(_grid.size())
+					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
+		}
+
+		if (_dirty)
 		{
 			Containers::Array<HexPointData> points{Containers::DefaultInit, _grid.size()};
 			u64 index = 0;
@@ -208,13 +219,8 @@ namespace hex
 				index++;
 			}
 
-			_pointBuffer = GL::Buffer{};
 			_pointBuffer.setData(points);
-
-			_mesh = GL::Mesh{};
-			_mesh.setPrimitive(GL::MeshPrimitive::Points)
-					.setCount(_grid.size())
-					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
+			_dirty = false;
 		}
 
 		_shader.set_transformation_matrix(transform)

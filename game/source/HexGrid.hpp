@@ -227,6 +227,12 @@ namespace hex
 
 		void create_texture();
 
+		void set_dirty(bool value)
+		{ _dirty = value; }
+
+		bool is_dirty() const
+		{ return _dirty; }
+
 		optional<reference_wrapper<Tile>> at(Axial const& coords);
 
 		void insert(Axial const& coords, u64 type_index);
@@ -241,5 +247,6 @@ namespace hex
 		Magnum::GL::Buffer _pointBuffer{NoCreate};
 		Magnum::GL::Mesh _mesh{NoCreate};
 		HexShader _shader{NoCreate};
+		bool _dirty{true};
 	};
 }
