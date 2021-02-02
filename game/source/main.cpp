@@ -78,11 +78,23 @@ private:
 	f32mat3 _proj{};
 	f32mat3 _view{};
 
+	std::unordered_map<KeyEvent::Key, bool> _keyTracker{};
+
 	void drawEvent() override
 	{
 		GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
 		_ctx.newFrame();
 		_ctx.updateApplicationCursor(*this);
+
+		if (_keyTracker.contains(KeyEvent::Key::W) && _keyTracker[KeyEvent::Key::W])
+			_view = _view * f32mat3::translation(f32vec2{0.f, -500.f} * _time.previousFrameDuration());
+		if (_keyTracker.contains(KeyEvent::Key::S) && _keyTracker[KeyEvent::Key::S])
+			_view = _view * f32mat3::translation(f32vec2{0.f, 500.f} * _time.previousFrameDuration());
+
+		if (_keyTracker.contains(KeyEvent::Key::A) && _keyTracker[KeyEvent::Key::A])
+			_view = _view * f32mat3::translation(f32vec2{500.f, 0.f} * _time.previousFrameDuration());
+		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
+			_view = _view * f32mat3::translation(f32vec2{-500.f, 0.f} * _time.previousFrameDuration());
 
 		_grid.render(_proj * _view);
 
@@ -102,12 +114,16 @@ private:
 	}
 
 	void keyReleaseEvent(KeyEvent& event) override
-	{ _ctx.handleKeyReleaseEvent(event); }
+	{
+		_ctx.handleKeyReleaseEvent(event);
+		_keyTracker[event.key()] = false;
+	}
 
 	void keyPressEvent(KeyEvent& event) override
 	{
 		if (!_ctx.handleKeyPressEvent(event))
 		{
+			_keyTracker[event.key()] = true;
 			if (event.key() == KeyEvent::Key::Esc)
 			{
 				exit();
@@ -126,7 +142,13 @@ private:
 	{ _ctx.handleMouseMoveEvent(event); }
 
 	void mouseScrollEvent(MouseScrollEvent& event) override
-	{ _ctx.handleMouseScrollEvent(event); }
+	{
+		if(!_ctx.handleMouseScrollEvent(event))
+		{
+			f32 amount = event.offset().y() < 0.f ? 0.9f : 1.1f;
+			_view = _view * f32mat3::scaling({amount, amount});
+		}
+	}
 
 	void textInputEvent(TextInputEvent& event) override
 	{ _ctx.handleTextInputEvent(event); }
