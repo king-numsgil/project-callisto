@@ -4,9 +4,7 @@
 #include <Magnum/Shaders/Flat.h>
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Timeline.h>
-
-#include <Magnum/GL/TextureArray.h>
-#include <Magnum/GL/ImageFormat.h>
+#include <random>
 
 #include "ScriptContext.hpp"
 #include "ImContext.hpp"
@@ -59,10 +57,15 @@ public:
 		_grid.load_terrain_types();
 		_grid.create_texture();
 
-		_grid.insert({0, 1}, 1);
-		_grid.insert({0, 0}, 1);
-		_grid.insert({0, -1}, 2);
-		_grid.insert({1, 0}, 0);
+		std::random_device rd;
+		std::mt19937 gen{rd()};
+		std::uniform_int_distribution<u64> distrib{0, 2};
+
+		for (i32 q = -400; q <= 400; ++q)
+			for (i32 r = -400; r <= 400; ++r)
+				_grid.insert({q, r}, distrib(gen));
+
+		Debug{} << "Generated" << _grid.size() << "tiles";
 	}
 
 	virtual ~CallistoGame() = default;
@@ -87,16 +90,17 @@ private:
 		_ctx.updateApplicationCursor(*this);
 
 		if (_keyTracker.contains(KeyEvent::Key::W) && _keyTracker[KeyEvent::Key::W])
-			_view = _view * f32mat3::translation(f32vec2{0.f, -500.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{0.f, -1000.f} * _time.previousFrameDuration());
 		if (_keyTracker.contains(KeyEvent::Key::S) && _keyTracker[KeyEvent::Key::S])
-			_view = _view * f32mat3::translation(f32vec2{0.f, 500.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{0.f, 1000.f} * _time.previousFrameDuration());
 
 		if (_keyTracker.contains(KeyEvent::Key::A) && _keyTracker[KeyEvent::Key::A])
-			_view = _view * f32mat3::translation(f32vec2{500.f, 0.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{1000.f, 0.f} * _time.previousFrameDuration());
 		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
-			_view = _view * f32mat3::translation(f32vec2{-500.f, 0.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{-1000.f, 0.f} * _time.previousFrameDuration());
 
 		_grid.render(_proj * _view);
+		ImGui::ShowMetricsWindow();
 
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
@@ -146,7 +150,7 @@ private:
 		if(!_ctx.handleMouseScrollEvent(event))
 		{
 			f32 amount = event.offset().y() < 0.f ? 0.9f : 1.1f;
-			_view = _view * f32mat3::scaling({amount, amount});
+			_view = f32mat3::scaling({amount, amount}) * _view;
 		}
 	}
 

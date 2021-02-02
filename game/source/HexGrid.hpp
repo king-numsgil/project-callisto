@@ -223,6 +223,9 @@ namespace hex
 		vector<TerrainTypeInfo>& terrain_types()
 		{ return _types; }
 
+		u64 size() const
+		{ return _grid.size(); }
+
 		void load_terrain_types();
 
 		void create_texture();
