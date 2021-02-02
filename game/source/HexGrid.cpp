@@ -181,7 +181,7 @@ namespace hex
 
 	optional<reference_wrapper<Tile>> Grid::at(const Axial& coords)
 	{
-		if (_grid.find(coords) == _grid.end())
+		if (!_grid.contains(coords))
 			return nullopt;
 
 		return ref(_grid.at(coords));
