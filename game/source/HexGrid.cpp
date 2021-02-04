@@ -153,7 +153,7 @@ namespace hex
 	{
 		_texArray = GL::Texture2DArray{};
 		_texArray.setWrapping(GL::SamplerWrapping::ClampToEdge)
-				.setMagnificationFilter(GL::SamplerFilter::Nearest)
+				.setMagnificationFilter(GL::SamplerFilter::Linear)
 				.setMinificationFilter(GL::SamplerFilter::Linear)
 				.setMaxLevel(4)
 				.setStorage(1, GL::TextureFormat::RGBA8,
