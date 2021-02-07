@@ -19,6 +19,8 @@ using namespace Magnum;
 
 using json = nlohmann::json;
 
+constexpr bool FLAT_TOPPED = true;
+
 struct HexPointData
 {
 	f32vec2 position{};
@@ -39,18 +41,35 @@ namespace hex
 	Cubic::operator Axial() const
 	{ return Axial{x(), z()}; }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
+
 	f32vec2 Axial::to_position(f32 radius) const
 	{
-		return {
-				radius * (3.f / 2.f * f32(q())),
-				radius * (sqrtf(3.f) / 2.f * f32(q()) + sqrtf(3.f) * f32(r()))
-		};
+		if constexpr (FLAT_TOPPED)
+		{
+			return {
+					radius * (3.f / 2.f * f32(q())),
+					radius * (sqrtf(3.f) / 2.f * f32(q()) + sqrtf(3.f) * f32(r()))
+			};
+		}
+		else
+		{
+			return {
+				radius * (sqrtf(3.f) * f32(q()) + sqrtf(3.f) / 2.f * f32(r())),
+				radius * (3.f / 2.f * f32(r()))
+			};
+		}
 	}
 
 	Axial Axial::from_position(f32vec2 const& position, f32 radius)
 	{
-		f32 q = (2.f / 3.f * position.x()) / radius;
-		f32 r = (-1.f / 3.f * position.x() + sqrtf(3.f) / 3.f * position.y()) / radius;
+		f32 q = FLAT_TOPPED
+				? (2.f / 3.f * position.x()) / radius
+				: (sqrtf(3.f) / 3.f * position.x() - 1.f / 3.f * position.y()) / radius;
+		f32 r = FLAT_TOPPED
+				? (-1.f / 3.f * position.x() + sqrtf(3.f) / 3.f * position.y()) / radius
+				: (2.f / 3.f * position.y()) / radius;
 
 		f32vec3 cube{q, -q - r, r};
 		f32vec3 diff{
@@ -74,6 +93,8 @@ namespace hex
 		}};
 	}
 
+#pragma clang diagnostic pop
+
 	Tile::Tile(Axial const& Coord, u64 TypeIndex)
 			: coord{Coord}, type_index{TypeIndex}
 	{}
@@ -96,6 +117,12 @@ namespace hex
 		attachShaders({vert, geo, frag});
 
 		CORRADE_INTERNAL_ASSERT_OUTPUT(link());
+	}
+
+	Grid::HexShader& Grid::HexShader::set_flat_topped(bool value)
+	{
+		setUniform(_flatToppedLocation, value ? i32(1) : i32(0));
+		return *this;
 	}
 
 	Grid::HexShader& Grid::HexShader::set_transformation_matrix(f32mat3 const& matrix)
@@ -195,7 +222,11 @@ namespace hex
 
 	void Grid::render(f32mat3 const& transform)
 	{
-		if (_shader.id() == 0) _shader = HexShader{};
+		if (_shader.id() == 0)
+		{
+			_shader = HexShader{};
+			_shader.set_flat_topped(FLAT_TOPPED);
+		}
 
 		if (_mesh.id() == 0)
 		{

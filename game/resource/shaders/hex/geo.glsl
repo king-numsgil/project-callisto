@@ -1,5 +1,6 @@
 layout(location = 0) uniform mat3 transform = mat3(1.0);
 layout(location = 1) uniform float radius = 100.0;
+layout(location = 2) uniform int flat_topped = 1;
 
 layout(points) in;
 layout(triangle_strip, max_vertices = 12) out;
@@ -18,7 +19,9 @@ void addPoint(int index)
 	float increment = TAU / 6.0;
 
 	float angle = index * increment;
-	vec2 sincos = vec2(cos(angle), sin(angle));
+	vec2 sincos = flat_topped == 1
+		? vec2(cos(angle), sin(angle))
+		: vec2(cos(angle - PI / 6.0), sin(angle - PI / 6.0));
 
 	gl_Position.xywz = vec4(transform * vec3(sincos.x * radius + center.x, sincos.y * radius + center.y, 1.0), 0.0);
 	geoTex = vec3(sincos.x * 0.5 + 0.5, sincos.y * 0.5 + 0.5, layer);

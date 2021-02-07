@@ -192,6 +192,8 @@ namespace hex
 
 			HexShader& operator=(HexShader&&) noexcept = default;
 
+			HexShader& set_flat_topped(bool value);
+
 			HexShader& set_transformation_matrix(f32mat3 const& matrix);
 
 			HexShader& set_radius(f32 radius = 100.f);
@@ -202,7 +204,7 @@ namespace hex
 			using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
 			using Magnum::GL::AbstractShaderProgram::dispatchCompute;
 
-			i32 _transformLocation{0}, _radiusLocation{1};
+			i32 _transformLocation{0}, _radiusLocation{1}, _flatToppedLocation{2};
 		};
 
 		Grid() = default;
