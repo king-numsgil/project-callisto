@@ -222,10 +222,23 @@ namespace hex
 
 	void Grid::render(f32mat3 const& transform)
 	{
-		if (_shader.id() == 0)
+		ensure_created();
+
+		if (_dirty)
 		{
-			_shader = HexShader{};
-			_shader.set_flat_topped(FLAT_TOPPED);
+			build_hex_mesh();
+			_dirty = false;
+		}
+
+		render_hex_mesh(transform);
+	}
+
+	void Grid::ensure_created()
+	{
+		if (_hexShader.id() == 0)
+		{
+			_hexShader = HexShader{};
+			_hexShader.set_flat_topped(FLAT_TOPPED);
 		}
 
 		if (_mesh.id() == 0)
@@ -237,25 +250,27 @@ namespace hex
 					.setCount(_grid.size())
 					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
 		}
+	}
 
-		if (_dirty)
-		{
-			Containers::Array<HexPointData> points{Containers::DefaultInit, _grid.size()};
-			u64 index = 0;
-
-			for (auto& tile : _grid)
-			{
-				points[index].layer = _types[tile.second.type_index].layer;
-				points[index].position = f32vec2{(f32) tile.second.coord.q(), (f32) tile.second.coord.r()};
-				index++;
-			}
-
-			_pointBuffer.setData(points);
-			_dirty = false;
-		}
-
-		_shader.set_transformation_matrix(transform)
+	void Grid::render_hex_mesh(const f32mat3& transform)
+	{
+		_hexShader.set_transformation_matrix(transform)
 				.bind_texture(_texArray)
 				.draw(_mesh);
+	}
+
+	void Grid::build_hex_mesh()
+	{
+		Containers::Array<HexPointData> points{Containers::DefaultInit, _grid.size()};
+		u64 index = 0;
+
+		for (auto& tile : _grid)
+		{
+			points[index].layer = _types[tile.second.type_index].layer;
+			points[index].position = f32vec2{(f32) tile.second.coord.q(), (f32) tile.second.coord.r()};
+			index++;
+		}
+
+		_pointBuffer.setData(points);
 	}
 }

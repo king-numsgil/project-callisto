@@ -245,13 +245,17 @@ namespace hex
 		void render(f32mat3 const& transform);
 
 	private:
+		void ensure_created();
+		void render_hex_mesh(f32mat3 const& transform);
+		void build_hex_mesh();
+
 		Magnum::GL::Texture2DArray _texArray{NoCreate};
 		vector<TerrainTypeInfo> _types{};
 		std::unordered_map<Axial, Tile> _grid{};
 
 		Magnum::GL::Buffer _pointBuffer{NoCreate};
 		Magnum::GL::Mesh _mesh{NoCreate};
-		HexShader _shader{NoCreate};
+		HexShader _hexShader{NoCreate};
 		bool _dirty{true};
 	};
 }
