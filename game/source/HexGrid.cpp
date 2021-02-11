@@ -241,12 +241,12 @@ namespace hex
 			_hexShader.set_flat_topped(FLAT_TOPPED);
 		}
 
-		if (_mesh.id() == 0)
+		if (_hexMesh.id() == 0)
 		{
 			_pointBuffer = GL::Buffer{};
 
-			_mesh = GL::Mesh{};
-			_mesh.setPrimitive(GL::MeshPrimitive::Points)
+			_hexMesh = GL::Mesh{};
+			_hexMesh.setPrimitive(GL::MeshPrimitive::Points)
 					.setCount(_grid.size())
 					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
 		}
@@ -256,7 +256,7 @@ namespace hex
 	{
 		_hexShader.set_transformation_matrix(transform)
 				.bind_texture(_texArray)
-				.draw(_mesh);
+				.draw(_hexMesh);
 	}
 
 	void Grid::build_hex_mesh()

@@ -254,7 +254,7 @@ namespace hex
 		std::unordered_map<Axial, Tile> _grid{};
 
 		Magnum::GL::Buffer _pointBuffer{NoCreate};
-		Magnum::GL::Mesh _mesh{NoCreate};
+		Magnum::GL::Mesh _hexMesh{NoCreate};
 		HexShader _hexShader{NoCreate};
 		bool _dirty{true};
 	};
