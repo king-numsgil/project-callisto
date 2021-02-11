@@ -19,7 +19,7 @@ using namespace Magnum;
 
 using json = nlohmann::json;
 
-constexpr bool FLAT_TOPPED = true;
+constexpr bool FLAT_TOPPED = false;
 
 struct HexPointData
 {
@@ -184,7 +184,7 @@ namespace hex
 				.setMinificationFilter(GL::SamplerFilter::Linear)
 				.setMaxLevel(4)
 				.setStorage(1, GL::TextureFormat::RGBA8,
-				            {512, 512, static_cast<i32>(_types.size())});
+				            {140, 140, static_cast<i32>(_types.size())});
 
 		PluginManager::Manager<Trade::AbstractImporter> plugins;
 		auto importer = plugins.loadAndInstantiate("StbImageImporter");
@@ -198,7 +198,7 @@ namespace hex
 			auto file = importer->image2D(0);
 			CORRADE_INTERNAL_ASSERT(file);
 
-			ImageView3D image{file->format(), {512, 512, 1}, file->data()};
+			ImageView3D image{file->format(), {140, 140, 1}, file->data()};
 			_texArray.setSubImage(0, i32vec3::zAxis(i), image);
 			_types[i].layer = (i32) i;
 		}

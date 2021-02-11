@@ -59,7 +59,7 @@ public:
 
 		std::random_device rd;
 		std::mt19937 gen{rd()};
-		std::uniform_int_distribution<u64> distrib{0, 2};
+		std::uniform_int_distribution<u64> distrib{0, 3};
 
 		for (i32 r = -400; r <= 400; ++r)
 			for (i32 q = -400; q <= 400; ++q)

@@ -1,14 +1,18 @@
 [
 	{
 		"name": "dirt",
-		"texture": "assets/map/dirt.tga"
+		"texture": "assets/map/dirt.png"
 	},
 	{
 		"name": "grass",
-		"texture": "assets/map/grass.tga"
+		"texture": "assets/map/grass.png"
 	},
 	{
 		"name": "stone",
-		"texture": "assets/map/stone.tga"
+		"texture": "assets/map/stone.png"
+	},
+	{
+		"name": "sand",
+		"texture": "assets/map/sand.png"
 	}
 ]
