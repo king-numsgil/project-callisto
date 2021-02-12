@@ -42,6 +42,10 @@ if (lua_ADDED)
 	list(REMOVE_ITEM lua_sources ${lua_SOURCE_DIR}/onelua.c)
 	add_library(lua STATIC ${lua_sources})
 
+	if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+		target_compile_options(lua PUBLIC -fPIC)
+	endif()
+
 	target_include_directories(lua
 		PUBLIC
 			$<BUILD_INTERFACE:${lua_SOURCE_DIR}>

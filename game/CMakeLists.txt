@@ -36,10 +36,6 @@ target_link_libraries(CallistoGame
 		Corrade::Utility
 		Corrade::Main
 
-		MagnumPlugins::TinyGltfImporter
-		MagnumPlugins::StbImageImporter
-		MagnumPlugins::StbTrueTypeFont
-
 		Magnum::Magnum
 		Magnum::GlfwApplication
 		Magnum::Primitives
@@ -50,6 +46,12 @@ target_link_libraries(CallistoGame
 		Magnum::GL
 	PUBLIC
 		${DEFAULT_LIBRARIES}
+)
+
+add_dependencies(CallistoGame
+		MagnumPlugins::TinyGltfImporter
+		MagnumPlugins::StbImageImporter
+		MagnumPlugins::StbTrueTypeFont
 )
 
 target_compile_definitions(CallistoGame
