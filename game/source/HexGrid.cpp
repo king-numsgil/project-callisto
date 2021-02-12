@@ -103,13 +103,13 @@ namespace hex
 	{
 		Utility::Resource rs("CallistoShaders");
 
-		GL::Shader vert{GL::Version::GL450, GL::Shader::Type::Vertex};
+		GL::Shader vert{GL::Version::GL430, GL::Shader::Type::Vertex};
 		vert.addSource(rs.get("hex/vert.glsl"));
 
-		GL::Shader geo{GL::Version::GL450, GL::Shader::Type::Geometry};
+		GL::Shader geo{GL::Version::GL430, GL::Shader::Type::Geometry};
 		geo.addSource(rs.get("hex/geo.glsl"));
 
-		GL::Shader frag{GL::Version::GL450, GL::Shader::Type::Fragment};
+		GL::Shader frag{GL::Version::GL430, GL::Shader::Type::Fragment};
 		frag.addSource(rs.get("hex/frag.glsl"));
 
 		CORRADE_INTERNAL_ASSERT_OUTPUT(GL::Shader::compile({vert, geo, frag}));
