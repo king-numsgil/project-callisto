@@ -11,8 +11,14 @@ add_executable(CallistoGame
 	source/Components.hpp
 	source/ScriptContext.cpp
 	source/ScriptContext.hpp
-	source/HexGrid.hpp
-	source/HexGrid.cpp
+
+	source/hex/all.hpp
+	source/hex/Coords.cpp
+	source/hex/Coords.hpp
+	source/hex/Tile.cpp
+	source/hex/Tile.hpp
+	source/hex/Grid.cpp
+	source/hex/Grid.hpp
 )
 
 set_target_properties(CallistoGame

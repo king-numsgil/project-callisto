@@ -8,7 +8,7 @@
 
 #include "ScriptContext.hpp"
 #include "ImContext.hpp"
-#include "HexGrid.hpp"
+#include "hex/all.hpp"
 
 using namespace Magnum;
 
