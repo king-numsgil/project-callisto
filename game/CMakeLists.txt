@@ -19,6 +19,8 @@ add_executable(CallistoGame
 	source/hex/Tile.hpp
 	source/hex/Grid.cpp
 	source/hex/Grid.hpp
+	source/hex/Feature.cpp
+	source/hex/Feature.hpp
 )
 
 set_target_properties(CallistoGame

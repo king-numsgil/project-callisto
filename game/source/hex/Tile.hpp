@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Feature.hpp"
 #include "Coords.hpp"
 
 namespace hex
 {
+	constexpr u64 FEATURES_COUNT = 10ull;
+
 	struct Tile
 	{
 		Tile(Tile const&) noexcept = delete;
@@ -18,5 +21,6 @@ namespace hex
 
 		Axial coord;
 		u64 type_index;
+		array<optional<Feature>, FEATURES_COUNT> features;
 	};
 }
