@@ -82,6 +82,8 @@ private:
 	f32mat3 _view{};
 
 	std::unordered_map<KeyEvent::Key, bool> _keyTracker{};
+	f32vec2 _mousePos{}, _mousePick{};
+	hex::Axial _mouseHex{0, 0};
 
 	void drawEvent() override
 	{
@@ -99,8 +101,15 @@ private:
 		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
 			_view = _view * f32mat3::translation(f32vec2{-1000.f, 0.f} * _time.previousFrameDuration());
 
+		_mousePick = unproject(_mousePos);
+		_mouseHex = hex::Axial::from_position(_mousePick);
+
 		_grid.render(_proj * _view);
 		ImGui::ShowMetricsWindow();
+
+		ImGui::InputFloat2("Raw Mouse Position", _mousePos.data());
+		ImGui::InputFloat2("Pick Mouse Position", _mousePick.data());
+		ImGui::InputInt2("Hex Mouse Position", _mouseHex.data.data());
 
 		GL::Renderer::enable(GL::Renderer::Feature::Blending);
 		GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
@@ -143,7 +152,12 @@ private:
 	{ _ctx.handleMousePressEvent(event); }
 
 	void mouseMoveEvent(MouseMoveEvent& event) override
-	{ _ctx.handleMouseMoveEvent(event); }
+	{
+		if (!_ctx.handleMouseMoveEvent(event))
+		{
+			_mousePos = f32vec2{event.position()};
+		}
+	}
 
 	void mouseScrollEvent(MouseScrollEvent& event) override
 	{
@@ -156,6 +170,18 @@ private:
 
 	void textInputEvent(TextInputEvent& event) override
 	{ _ctx.handleTextInputEvent(event); }
+
+	f32vec2 unproject(f32vec2 const& position)
+	{
+		f32mat4 inverse = (f32mat4{_proj} * f32mat4{_view}).inverted();
+		f32vec4 viewport{0.f, 0.f, static_cast<f32>(framebufferSize().x()), static_cast<f32>(framebufferSize().y())};
+
+		f32vec3 tmp{position, 0.f};
+		tmp.x() = (tmp.x() - viewport[0]) / viewport[2];
+		tmp.y() = (tmp.y() - viewport[1]) / viewport[3];
+		tmp = tmp * 2.f - f32vec3{1.f};
+		return inverse.transformPoint(tmp).xy();
+	}
 };
 
 int main(int argc, char** argv)
