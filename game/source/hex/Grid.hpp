@@ -46,13 +46,15 @@ namespace hex
 
 			HexShader& set_radius(f32 radius = 100.f);
 
+			HexShader& set_pick_location(Axial const& coord);
+
 			HexShader& bind_texture(Magnum::GL::Texture2DArray& texture);
 
 		private:
 			using Magnum::GL::AbstractShaderProgram::drawTransformFeedback;
 			using Magnum::GL::AbstractShaderProgram::dispatchCompute;
 
-			i32 _transformLocation{0}, _radiusLocation{1}, _flatToppedLocation{2};
+			i32 _transformLocation{0}, _radiusLocation{1}, _flatToppedLocation{2}, _pickCoordLocation{3};
 		};
 
 		Grid() = default;
@@ -86,6 +88,9 @@ namespace hex
 		bool is_dirty() const
 		{ return _dirty; }
 
+		void set_pick_coord(Axial const& coord)
+		{ _pickCoord = coord; }
+
 		optional<reference_wrapper<Tile>> at(Axial const& coords);
 
 		void insert(Axial const& coords, u64 type_index);
@@ -100,6 +105,7 @@ namespace hex
 		Magnum::GL::Texture2DArray _texArray{NoCreate};
 		vector<TerrainTypeInfo> _types{};
 		std::unordered_map<Axial, Tile> _grid{};
+		Axial _pickCoord{0, 0};
 
 		Magnum::GL::Buffer _pointBuffer{NoCreate};
 		Magnum::GL::Mesh _hexMesh{NoCreate};

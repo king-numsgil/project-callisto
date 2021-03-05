@@ -6,8 +6,10 @@ layout(points) in;
 layout(triangle_strip, max_vertices = 12) out;
 
 in float vsLayer[];
+in flat int vsPicked[];
 
 out vec3 geoTex;
+out flat int geoPicked;
 
 #define PI 3.141592654
 #define TAU 6.283185307
@@ -25,6 +27,7 @@ void addPoint(int index)
 
 	gl_Position.xywz = vec4(transform * vec3(sincos.x * radius + center.x, sincos.y * radius + center.y, 1.0), 0.0);
 	geoTex = vec3(sincos.x * 0.5 + 0.5, sincos.y * 0.5 + 0.5, layer);
+	geoPicked = vsPicked[0];
 	EmitVertex();
 }
 

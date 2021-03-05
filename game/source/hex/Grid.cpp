@@ -64,6 +64,12 @@ namespace hex
 		return *this;
 	}
 
+	Grid::HexShader& Grid::HexShader::set_pick_location(Axial const& coord)
+	{
+		setUniform(_pickCoordLocation, f32vec2{coord.data});
+		return *this;
+	}
+
 	Grid::HexShader& Grid::HexShader::bind_texture(GL::Texture2DArray& texture)
 	{
 		texture.bind(0);
@@ -182,6 +188,7 @@ namespace hex
 	void Grid::render_hex_mesh(const f32mat3& transform)
 	{
 		_hexShader.set_transformation_matrix(transform)
+				.set_pick_location(_pickCoord)
 				.bind_texture(_texArray)
 				.draw(_hexMesh);
 	}

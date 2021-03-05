@@ -78,8 +78,7 @@ private:
 	Shaders::Flat2D _shader{NoCreate};
 	hex::Grid _grid{};
 
-	f32mat3 _proj{};
-	f32mat3 _view{};
+	f32mat3 _proj{}, _view{};
 
 	std::unordered_map<KeyEvent::Key, bool> _keyTracker{};
 	f32vec2 _mousePos{}, _mousePick{};
@@ -92,18 +91,19 @@ private:
 		_ctx.updateApplicationCursor(*this);
 
 		if (_keyTracker.contains(KeyEvent::Key::W) && _keyTracker[KeyEvent::Key::W])
-			_view = _view * f32mat3::translation(f32vec2{0.f, -1000.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{0.f, -1500.f} * _time.previousFrameDuration());
 		if (_keyTracker.contains(KeyEvent::Key::S) && _keyTracker[KeyEvent::Key::S])
-			_view = _view * f32mat3::translation(f32vec2{0.f, 1000.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{0.f, 1500.f} * _time.previousFrameDuration());
 
 		if (_keyTracker.contains(KeyEvent::Key::A) && _keyTracker[KeyEvent::Key::A])
-			_view = _view * f32mat3::translation(f32vec2{1000.f, 0.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{1500.f, 0.f} * _time.previousFrameDuration());
 		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
-			_view = _view * f32mat3::translation(f32vec2{-1000.f, 0.f} * _time.previousFrameDuration());
+			_view = _view * f32mat3::translation(f32vec2{-1500.f, 0.f} * _time.previousFrameDuration());
 
 		_mousePick = unproject(_mousePos);
 		_mouseHex = hex::Axial::from_position(_mousePick);
 
+		_grid.set_pick_coord(_mouseHex);
 		_grid.render(_proj * _view);
 		ImGui::ShowMetricsWindow();
 
@@ -173,13 +173,14 @@ private:
 
 	f32vec2 unproject(f32vec2 const& position)
 	{
-		f32mat4 inverse = (f32mat4{_proj} * f32mat4{_view}).inverted();
+		f32mat4 inverse{(_proj * _view).inverted()};
 		f32vec4 viewport{0.f, 0.f, static_cast<f32>(framebufferSize().x()), static_cast<f32>(framebufferSize().y())};
 
 		f32vec3 tmp{position, 0.f};
 		tmp.x() = (tmp.x() - viewport[0]) / viewport[2];
 		tmp.y() = (tmp.y() - viewport[1]) / viewport[3];
 		tmp = tmp * 2.f - f32vec3{1.f};
+		tmp.y() = -tmp.y();
 		return inverse.transformPoint(tmp).xy();
 	}
 };
