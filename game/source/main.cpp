@@ -47,7 +47,6 @@ public:
 		                               GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
 		_proj = f32mat3::projection(f32vec2{windowSize()});
-		_view = f32mat3::translation({0.f, 0.f});
 
 		_shader = Shaders::Flat2D{Shaders::Flat2D::Flag::Textured};
 		_ctx = ImContext{windowSize()};
@@ -78,9 +77,10 @@ private:
 	Shaders::Flat2D _shader{NoCreate};
 	hex::Grid _grid{};
 
-	f32mat3 _proj{}, _view{};
+	f32mat3 _proj{};
 
 	std::unordered_map<KeyEvent::Key, bool> _keyTracker{};
+	f32vec3 _viewPos{0.f, 0.f, 1.f};
 	f32vec2 _mousePos{}, _mousePick{};
 	hex::Axial _mouseHex{0, 0};
 
@@ -91,20 +91,20 @@ private:
 		_ctx.updateApplicationCursor(*this);
 
 		if (_keyTracker.contains(KeyEvent::Key::W) && _keyTracker[KeyEvent::Key::W])
-			_view = _view * f32mat3::translation(f32vec2{0.f, -1500.f} * _time.previousFrameDuration());
+			_viewPos.y() += -1500.f * _time.previousFrameDuration();
 		if (_keyTracker.contains(KeyEvent::Key::S) && _keyTracker[KeyEvent::Key::S])
-			_view = _view * f32mat3::translation(f32vec2{0.f, 1500.f} * _time.previousFrameDuration());
+			_viewPos.y() += 1500.f * _time.previousFrameDuration();
 
 		if (_keyTracker.contains(KeyEvent::Key::A) && _keyTracker[KeyEvent::Key::A])
-			_view = _view * f32mat3::translation(f32vec2{1500.f, 0.f} * _time.previousFrameDuration());
+			_viewPos.x() += 1500.f * _time.previousFrameDuration();
 		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
-			_view = _view * f32mat3::translation(f32vec2{-1500.f, 0.f} * _time.previousFrameDuration());
+			_viewPos.x() += -1500.f * _time.previousFrameDuration();
 
 		_mousePick = unproject(_mousePos);
 		_mouseHex = hex::Axial::from_position(_mousePick);
 
 		_grid.set_pick_coord(_mouseHex);
-		_grid.render(_proj * _view);
+		_grid.render(_proj * f32mat3::scaling({_viewPos.z(), _viewPos.z()}) * f32mat3::translation(_viewPos.xy()));
 		ImGui::ShowMetricsWindow();
 
 		ImGui::InputFloat2("Raw Mouse Position", _mousePos.data());
@@ -161,10 +161,10 @@ private:
 
 	void mouseScrollEvent(MouseScrollEvent& event) override
 	{
-		if(!_ctx.handleMouseScrollEvent(event))
+		if (!_ctx.handleMouseScrollEvent(event))
 		{
 			f32 amount = event.offset().y() < 0.f ? 0.9f : 1.1f;
-			_view = f32mat3::scaling({amount, amount}) * _view;
+			_viewPos.z() *= amount;
 		}
 	}
 
@@ -173,7 +173,10 @@ private:
 
 	f32vec2 unproject(f32vec2 const& position)
 	{
-		f32mat4 inverse{(_proj * _view).inverted()};
+		f32mat4 inverse{(
+				                _proj * f32mat3::scaling({_viewPos.z(), _viewPos.z()})
+				                * f32mat3::translation(-_viewPos.xy())
+		                ).inverted()};
 		f32vec4 viewport{0.f, 0.f, static_cast<f32>(framebufferSize().x()), static_cast<f32>(framebufferSize().y())};
 
 		f32vec3 tmp{position, 0.f};
