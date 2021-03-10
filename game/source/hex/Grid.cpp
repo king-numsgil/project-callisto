@@ -171,7 +171,8 @@ namespace hex
 		if (_hexShader.id() == 0)
 		{
 			_hexShader = HexShader{};
-			_hexShader.set_flat_topped(FLAT_TOPPED);
+			_hexShader.set_flat_topped(FLAT_TOPPED)
+					.set_radius(RADIUS);
 		}
 
 		if (_hexMesh.id() == 0)

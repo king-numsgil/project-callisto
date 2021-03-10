@@ -21,32 +21,32 @@ namespace hex
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "Simplify"
 
-	f32vec2 Axial::to_position(f32 radius) const
+	f32vec2 Axial::to_position() const
 	{
 		if constexpr (FLAT_TOPPED)
 		{
 			return {
-					radius * (3.f / 2.f * f32(q())),
-					radius * (sqrtf(3.f) / 2.f * f32(q()) + sqrtf(3.f) * f32(r()))
+					RADIUS * (3.f / 2.f * f32(q())),
+					RADIUS * (sqrtf(3.f) / 2.f * f32(q()) + sqrtf(3.f) * f32(r()))
 			};
 		}
 		else
 		{
 			return {
-					radius * (sqrtf(3.f) * f32(q()) + sqrtf(3.f) / 2.f * f32(r())),
-					radius * (3.f / 2.f * f32(r()))
+					RADIUS * (sqrtf(3.f) * f32(q()) + sqrtf(3.f) / 2.f * f32(r())),
+					RADIUS * (3.f / 2.f * f32(r()))
 			};
 		}
 	}
 
-	Axial Axial::from_position(f32vec2 const& position, f32 radius)
+	Axial Axial::from_position(f32vec2 const& position)
 	{
 		f32 q = FLAT_TOPPED
-		        ? (2.f / 3.f * position.x()) / radius
-		        : (sqrtf(3.f) / 3.f * position.x() - 1.f / 3.f * position.y()) / radius;
+		        ? (2.f / 3.f * position.x()) / RADIUS
+		        : (sqrtf(3.f) / 3.f * position.x() - 1.f / 3.f * position.y()) / RADIUS;
 		f32 r = FLAT_TOPPED
-		        ? (-1.f / 3.f * position.x() + sqrtf(3.f) / 3.f * position.y()) / radius
-		        : (2.f / 3.f * position.y()) / radius;
+		        ? (-1.f / 3.f * position.x() + sqrtf(3.f) / 3.f * position.y()) / RADIUS
+		        : (2.f / 3.f * position.y()) / RADIUS;
 
 		f32vec3 cube{q, -q - r, r};
 		f32vec3 diff{

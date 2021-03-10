@@ -5,6 +5,7 @@
 namespace hex
 {
 	constexpr bool FLAT_TOPPED = false;
+	constexpr f32 RADIUS = 50.f;
 
 	struct Axial;
 	struct Cubic;
@@ -41,9 +42,9 @@ namespace hex
 		inline i32 r() const
 		{ return data.y(); }
 
-		[[nodiscard]] f32vec2 to_position(f32 radius = 100.f) const;
+		[[nodiscard]] f32vec2 to_position() const;
 
-		static Axial from_position(f32vec2 const& position, f32 radius = 100.f);
+		static Axial from_position(f32vec2 const& position);
 
 		i32vec2 data;
 	};
