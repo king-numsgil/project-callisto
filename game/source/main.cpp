@@ -173,9 +173,9 @@ private:
 
 	f32vec2 unproject(f32vec2 const& position)
 	{
-		f32mat4 inverse{(
-				                _proj * f32mat3::scaling({_viewPos.z(), _viewPos.z()})
-				                * f32mat3::translation(-_viewPos.xy())
+		f32mat4 inverse{(_proj
+		                 * f32mat3::scaling({_viewPos.z(), _viewPos.z()})
+		                 * f32mat3::translation(-_viewPos.xy())
 		                ).inverted()};
 		f32vec4 viewport{0.f, 0.f, static_cast<f32>(framebufferSize().x()), static_cast<f32>(framebufferSize().y())};
 
