@@ -169,6 +169,9 @@ private:
 		{
 			f32 amount = event.offset().y() < 0.f ? 0.9f : 1.1f;
 			_viewPos.z() *= amount;
+
+			if (_viewPos.z() > 1.f) _viewPos.z() = 1.f;
+			if (_viewPos.z() < 0.2f) _viewPos.z() = 0.2f;
 		}
 	}
 
