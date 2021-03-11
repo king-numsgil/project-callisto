@@ -94,15 +94,16 @@ private:
 		_ctx.newFrame();
 		_ctx.updateApplicationCursor(*this);
 
+		const f32 speed = 1000.f / _viewPos.z();
 		if (_keyTracker.contains(KeyEvent::Key::W) && _keyTracker[KeyEvent::Key::W])
-			_viewPos.y() += -1500.f * _time.previousFrameDuration();
+			_viewPos.y() += -speed * _time.previousFrameDuration();
 		if (_keyTracker.contains(KeyEvent::Key::S) && _keyTracker[KeyEvent::Key::S])
-			_viewPos.y() += 1500.f * _time.previousFrameDuration();
+			_viewPos.y() += speed * _time.previousFrameDuration();
 
 		if (_keyTracker.contains(KeyEvent::Key::A) && _keyTracker[KeyEvent::Key::A])
-			_viewPos.x() += 1500.f * _time.previousFrameDuration();
+			_viewPos.x() += speed * _time.previousFrameDuration();
 		if (_keyTracker.contains(KeyEvent::Key::D) && _keyTracker[KeyEvent::Key::D])
-			_viewPos.x() += -1500.f * _time.previousFrameDuration();
+			_viewPos.x() += -speed * _time.previousFrameDuration();
 
 		_mousePick = unproject(_mousePos);
 		_mouseHex = hex::Axial::from_position(_mousePick);
