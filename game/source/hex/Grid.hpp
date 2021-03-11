@@ -99,7 +99,9 @@ namespace hex
 
 	private:
 		void ensure_created();
+
 		void render_hex_mesh(f32mat3 const& transform);
+
 		void build_hex_mesh();
 
 		Magnum::GL::Texture2DArray _texArray{NoCreate};

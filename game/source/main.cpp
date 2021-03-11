@@ -61,7 +61,8 @@ public:
 		std::uniform_int_distribution<u64> distrib{0, 3};
 
 		const i32 map_radius = 400;
-		for (int q = -map_radius; q <= map_radius; q++) {
+		for (int q = -map_radius; q <= map_radius; q++)
+		{
 			int r1 = std::max(-map_radius, -q - map_radius);
 			int r2 = std::min(map_radius, -q + map_radius);
 			for (int r = r1; r <= r2; r++)
