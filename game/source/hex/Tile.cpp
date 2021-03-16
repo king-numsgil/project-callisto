@@ -3,6 +3,6 @@
 namespace hex
 {
 	Tile::Tile(Axial const& Coord, u64 TypeIndex)
-			: coord{Coord}, type_index{TypeIndex}, features{nullopt}
+			: coord{Coord}, type_index{TypeIndex}, feature{nullopt}
 	{}
 }
