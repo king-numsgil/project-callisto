@@ -28,6 +28,7 @@ target_include_directories(ImGUI
 target_link_libraries(ImGUI
 	PRIVATE
 	PUBLIC
+		imm32
 		${DEFAULT_LIBRARIES}
 )
 
