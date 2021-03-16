@@ -173,7 +173,7 @@ private:
 			_viewPos.z() *= amount;
 
 			if (_viewPos.z() > 1.f) _viewPos.z() = 1.f;
-			if (_viewPos.z() < 0.2f) _viewPos.z() = 0.2f;
+			if (_viewPos.z() < 0.1f) _viewPos.z() = 0.1f;
 		}
 	}
 
