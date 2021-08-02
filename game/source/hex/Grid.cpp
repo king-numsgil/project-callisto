@@ -44,6 +44,11 @@ namespace hex
 		attachShaders({vert, geo, frag});
 
 		CORRADE_INTERNAL_ASSERT_OUTPUT(link());
+
+		_flatToppedLocation = uniformLocation("flat_topped");
+		_pickCoordLocation = uniformLocation("pick_coord");
+		_transformLocation = uniformLocation("transform");
+		_radiusLocation = uniformLocation("radius");
 	}
 
 	Grid::HexShader& Grid::HexShader::set_flat_topped(bool value)
