@@ -5,7 +5,7 @@
 namespace hex
 {
 	constexpr bool FLAT_TOPPED = false;
-	constexpr f32 RADIUS = 50.f;
+	constexpr f32 RADIUS = 50.5f;
 
 	struct Axial;
 	struct Cubic;

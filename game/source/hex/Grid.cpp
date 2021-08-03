@@ -49,6 +49,9 @@ namespace hex
 		_pickCoordLocation = uniformLocation("pick_coord");
 		_transformLocation = uniformLocation("transform");
 		_radiusLocation = uniformLocation("radius");
+
+		set_flat_topped(FLAT_TOPPED);
+		set_radius(RADIUS);
 	}
 
 	Grid::HexShader& Grid::HexShader::set_flat_topped(bool value)
@@ -174,11 +177,7 @@ namespace hex
 	void Grid::ensure_created()
 	{
 		if (_hexShader.id() == 0)
-		{
 			_hexShader = HexShader{};
-			_hexShader.set_flat_topped(FLAT_TOPPED)
-					.set_radius(RADIUS);
-		}
 
 		if (_hexMesh.id() == 0)
 		{
@@ -186,7 +185,7 @@ namespace hex
 
 			_hexMesh = GL::Mesh{};
 			_hexMesh.setPrimitive(GL::MeshPrimitive::Points)
-					.setCount(_grid.size())
+					.setCount(static_cast<i32>(_grid.size()))
 					.addVertexBuffer(_pointBuffer, 0, HexShader::Coords{}, HexShader::Layer{});
 		}
 	}
