@@ -27,5 +27,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/out")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/out")
 
 add_subdirectory(deps)
-add_subdirectory(scripting)
 add_subdirectory(game)

@@ -9,8 +9,6 @@ add_executable(CallistoGame
 	source/ImContext.cpp
 	source/ImContext.hpp
 	source/Components.hpp
-	source/ScriptContext.cpp
-	source/ScriptContext.hpp
 
 	source/hex/all.hpp
 	source/hex/Coords.cpp
@@ -37,8 +35,7 @@ target_include_directories(CallistoGame
 
 target_link_libraries(CallistoGame
 	PRIVATE
-		Json EnTT sol2 ImGUI
-		CallistoScripting
+		Json EnTT ImGUI
 
 		Corrade::Containers
 		Corrade::Utility

@@ -6,7 +6,6 @@
 #include <Magnum/Timeline.h>
 #include <random>
 
-#include "ScriptContext.hpp"
 #include "ImContext.hpp"
 #include "hex/all.hpp"
 
@@ -51,8 +50,7 @@ public:
 		_shader = Shaders::Flat2D{Shaders::Flat2D::Flag::Textured};
 		_ctx = ImContext{windowSize()};
 		_time.start();
-
-		_scr.file("assets/script/test.lua");
+		
 		_grid.load_terrain_types();
 		_grid.create_texture();
 
@@ -75,7 +73,6 @@ public:
 	virtual ~CallistoGame() = default;
 
 private:
-	ScriptContext _scr{};
 	ImContext _ctx{NoCreate};
 	Timeline _time{};
 

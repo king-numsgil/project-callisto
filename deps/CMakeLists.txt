@@ -29,43 +29,6 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
-	NAME lua
-	GITHUB_REPOSITORY lua/lua
-	VERSION 5.3.6
-	DOWNLOAD_ONLY YES
-)
-
-if (lua_ADDED)
-	# lua has no CMake support, so we create our own target
-
-	file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
-	list(REMOVE_ITEM lua_sources ${lua_SOURCE_DIR}/onelua.c)
-	add_library(lua STATIC ${lua_sources})
-
-	if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-		target_compile_options(lua PUBLIC -fPIC)
-	endif()
-
-	target_include_directories(lua
-		PUBLIC
-			$<BUILD_INTERFACE:${lua_SOURCE_DIR}>
-	)
-endif()
-
-CPMAddPackage(
-	NAME sol2
-	URL https://github.com/ThePhD/sol2/archive/v3.2.2.zip
-	VERSION 3.2.2
-	DOWNLOAD_ONLY YES
-)
-
-if (sol2_ADDED)
-	add_library(sol2 INTERFACE)
-	target_include_directories(sol2 INTERFACE ${sol2_SOURCE_DIR}/include)
-	target_link_libraries(sol2 INTERFACE lua)
-endif()
-
-CPMAddPackage(
 	NAME Corrade
 	GITHUB_REPOSITORY mosra/corrade
 	VERSION 2020.06
